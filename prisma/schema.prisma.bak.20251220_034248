@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Saint {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  name      String
+  country   String?
+
+  title     String?
+  feastDay  String?
+  imageUrl  String?
+  biography String?  @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  miracles Miracle[]
+}
+
+
+model Miracle {
+  id        String   @id @default(cuid())
+  saintId   String
+  title     String
+  type      String?  // ej: "Curación", "Eucarístico", "Aparición"
+  date      String?  // por ahora string (luego lo pasamos a Date si quieres)
+  location  String?
+  witnesses String?
+  approved  Boolean  @default(false)
+  details   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  saint     Saint    @relation(fields: [saintId], references: [id], onDelete: Cascade)
+
+  @@index([saintId])
+}
+
+model Prayer {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  category  String?  // ej: "Sanación", "Familia", "Trabajo"
+  approved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
