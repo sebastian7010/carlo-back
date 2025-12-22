@@ -83,13 +83,49 @@ app.post("/saints", async (req: Request, res: Response) => {
     return res.status(400).json({ error: "slug y name son obligatorios" });
   }
 
+
+  const continentRaw = req.body.continent;
+  const latRaw = req.body.lat;
+  const lngRaw = req.body.lng;
+
+  const continent =
+    typeof continentRaw === "string" && continentRaw.trim() ? continentRaw.trim() : null;
+
+  const lat =
+    latRaw === null || latRaw === undefined || latRaw === ""
+      ? null
+      : Number(latRaw);
+
+  const lng =
+    lngRaw === null || lngRaw === undefined || lngRaw === ""
+      ? null
+      : Number(lngRaw);
+
+  // Validaciones mínimas (pro)
+  if ((lat !== null && Number.isNaN(lat)) || (lng !== null && Number.isNaN(lng))) {
+    return res.status(400).json({ error: "lat y lng deben ser números" });
+  }
+  if ((lat === null) !== (lng === null)) {
+    return res.status(400).json({ error: "Debes enviar lat y lng juntos (o ambos vacíos)" });
+  }
+  if (lat !== undefined && lat !== null && (lat < -90 || lat > 90)) {
+    return res.status(400).json({ error: "lat fuera de rango (-90 a 90)" });
+  }
+  if (lng !== undefined && lng !== null && (lng < -180 || lng > 180)) {
+    return res.status(400).json({ error: "lng fuera de rango (-180 a 180)" });
+  }
+
+
   try {
     const saint = await prisma.saint.create({
       data: {
         slug: String(slug).trim(),
         name: String(name).trim(),
         country: country ? String(country).trim() : null,
-      } as any,
+        continent,
+        lat,
+        lng,
+} as any,
     });
     return res.status(201).json(saint);
   } catch (e: any) {
@@ -103,6 +139,49 @@ app.patch("/saints/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
   const { slug, name, country, title, feastDay, imageUrl, biography } = req.body ?? {};
 
+
+  
+  const continentRaw = req.body.continent;
+  const latRaw = req.body.lat;
+  const lngRaw = req.body.lng;
+
+  const continent =
+    continentRaw === undefined
+      ? undefined
+      : (typeof continentRaw === "string" && continentRaw.trim() ? continentRaw.trim() : null);
+
+  const lat =
+    latRaw === undefined
+      ? undefined
+      : (latRaw === null || latRaw === "" ? null : Number(latRaw));
+
+  const lng =
+    lngRaw === undefined
+      ? undefined
+      : (lngRaw === null || lngRaw === "" ? null : Number(lngRaw));
+
+  // Validaciones (solo si intentan setear lat/lng)
+  const latIsSet = lat !== undefined;
+  const lngIsSet = lng !== undefined;
+
+  if (latIsSet || lngIsSet) {
+    if ((lat !== null && lat !== undefined && Number.isNaN(lat)) || (lng !== null && lng !== undefined && Number.isNaN(lng))) {
+      return res.status(400).json({ error: "lat y lng deben ser números" });
+    }
+    // si uno viene en el body y el otro no, o si uno queda null y el otro no
+    if (latIsSet !== lngIsSet) {
+      return res.status(400).json({ error: "En PATCH, lat y lng deben enviarse juntos" });
+    }
+    if ((lat === null) !== (lng === null)) {
+      return res.status(400).json({ error: "lat y lng deben ser ambos null o ambos números" });
+    }
+    if (lat !== undefined && lat !== null && (lat < -90 || lat > 90)) {
+      return res.status(400).json({ error: "lat fuera de rango (-90 a 90)" });
+    }
+    if (lng !== undefined && lng !== null && (lng < -180 || lng > 180)) {
+      return res.status(400).json({ error: "lng fuera de rango (-180 a 180)" });
+    }
+  }
   try {
     const updated = await prisma.saint.update({
       where: { id },
@@ -110,6 +189,9 @@ app.patch("/saints/:id", async (req: Request, res: Response) => {
         ...(slug !== undefined ? { slug: slug ? String(slug).trim() : "" } : {}),
         ...(name !== undefined ? { name: name ? String(name).trim() : "" } : {}),
         ...(country !== undefined ? { country: country ? String(country).trim() : null } : {}),
+        ...(continent !== undefined ? { continent } : {}),
+        ...(lat !== undefined ? { lat } : {}),
+        ...(lng !== undefined ? { lng } : {}),
         ...(title !== undefined ? { title: title ? String(title).trim() : null } : {}),
         ...(feastDay !== undefined ? { feastDay: feastDay ? String(feastDay).trim() : null } : {}),
         ...(imageUrl !== undefined ? { imageUrl: imageUrl ? String(imageUrl).trim() : null } : {}),

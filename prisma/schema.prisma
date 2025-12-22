@@ -22,6 +22,9 @@ model Saint {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   miracles Miracle[]
+    continent String?
+  lat       Float?
+  lng       Float?
 }
 
 
