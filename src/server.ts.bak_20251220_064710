@@ -1,26 +1,10 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 import { prisma } from "./lib/prisma";
-import "dotenv/config";
-
-// -------------------------
-// ADMIN KEY (mínimo para escrituras)
-// -------------------------
-function requireAdminKey(req: Request, res: Response, next: any) {
-  const expected = process.env.ADMIN_KEY;
-
-  // Si no está configurada, NO bloquea (modo dev)
-  if (!expected) return next();
-
-  const provided = req.header("x-admin-key");
-  if (provided && provided === expected) return next();
-
-  return res.status(401).json({ error: "UNAUTHORIZED" });
-}
 
 const app = express();
 
-// CORS (front en 3000)
+// CORS (mantiene tu front en 3000; credentials no rompe y ayuda si luego usas cookies)
 app.use(
   cors({
     origin: "http://localhost:3000",
@@ -28,17 +12,17 @@ app.use(
   })
 );
 
-// JSON
+// JSON (límite razonable, no rompe)
 app.use(express.json({ limit: "1mb" }));
 
-const PORT = Number(process.env.PORT || 3001);
+const PORT = 3001;
 
 // Health
 app.get("/health", (_req: Request, res: Response) => {
   return res.json({ ok: true });
 });
 
-// Root
+// Root para que no salga "Cannot GET /"
 app.get("/", (_req: Request, res: Response) => {
   res.send("Acutis API OK ✅  Usa /health, /saints, /saints/:id/miracles");
 });
@@ -89,7 +73,7 @@ app.post("/saints", async (req: Request, res: Response) => {
         slug: String(slug).trim(),
         name: String(name).trim(),
         country: country ? String(country).trim() : null,
-      } as any,
+      },
     });
     return res.status(201).json(saint);
   } catch (e: any) {
@@ -114,7 +98,7 @@ app.patch("/saints/:id", async (req: Request, res: Response) => {
         ...(feastDay !== undefined ? { feastDay: feastDay ? String(feastDay).trim() : null } : {}),
         ...(imageUrl !== undefined ? { imageUrl: imageUrl ? String(imageUrl).trim() : null } : {}),
         ...(biography !== undefined ? { biography: biography ? String(biography).trim() : null } : {}),
-      } as any,
+      },
     });
 
     return res.json(updated);
@@ -236,7 +220,7 @@ app.post("/saints/:id/miracles", async (req: Request, res: Response) => {
         location: location ? String(location).trim() : null,
         witnesses: witnesses ? String(witnesses).trim() : null,
         ...(approved !== undefined ? { approved } : {}),
-      } as any,
+      },
     });
 
     return res.status(201).json(miracle);
@@ -278,7 +262,7 @@ app.patch("/miracles/:id", async (req: Request, res: Response) => {
         ...(location !== undefined ? { location: location ? String(location).trim() : null } : {}),
         ...(witnesses !== undefined ? { witnesses: witnesses ? String(witnesses).trim() : null } : {}),
         ...(approved !== undefined ? { approved } : {}),
-      } as any,
+      },
     });
 
     return res.json(updated);
@@ -335,9 +319,9 @@ app.get("/prayers/approved", async (req: Request, res: Response) => {
 });
 
 // POST /prayers -> crear
-app.post("/prayers", requireAdminKey, async (req: Request, res: Response) => {
+app.post("/prayers", async (req: Request, res: Response) => {
   try {
-    const { title, content, category, approved, saintName, occasion } = req.body ?? {};
+    const { title, content, category, approved } = req.body ?? {};
 
     if (!title || String(title).trim() === "") {
       return res.status(400).json({ error: "TITLE_REQUIRED" });
@@ -352,9 +336,7 @@ app.post("/prayers", requireAdminKey, async (req: Request, res: Response) => {
         content: String(content).trim(),
         category: category == null ? null : String(category).trim(),
         approved: Boolean(approved),
-        saintName: saintName == null ? null : String(saintName).trim(),
-        occasion: occasion == null ? null : String(occasion).trim(),
-      } as any,
+      },
     });
 
     return res.status(201).json(prayer);
@@ -365,10 +347,10 @@ app.post("/prayers", requireAdminKey, async (req: Request, res: Response) => {
 });
 
 // PATCH /prayers/:id -> editar parcial
-app.patch("/prayers/:id", requireAdminKey, async (req: Request, res: Response) => {
+app.patch("/prayers/:id", async (req: Request, res: Response) => {
   try {
     const id = String(req.params.id || "");
-    const { title, content, category, approved, saintName, occasion } = req.body ?? {};
+    const { title, content, category, approved } = req.body ?? {};
 
     const exists = await prisma.prayer.findUnique({ where: { id } });
     if (!exists) return res.status(404).json({ error: "PRAYER_NOT_FOUND" });
@@ -378,8 +360,6 @@ app.patch("/prayers/:id", requireAdminKey, async (req: Request, res: Response) =
     if (content !== undefined) data.content = String(content).trim();
     if (category !== undefined) data.category = category === null ? null : String(category).trim();
     if (approved !== undefined) data.approved = Boolean(approved);
-    if (saintName !== undefined) data.saintName = saintName === null ? null : String(saintName).trim();
-    if (occasion !== undefined) data.occasion = occasion === null ? null : String(occasion).trim();
 
     const prayer = await prisma.prayer.update({ where: { id }, data });
     return res.json(prayer);
@@ -390,7 +370,7 @@ app.patch("/prayers/:id", requireAdminKey, async (req: Request, res: Response) =
 });
 
 // DELETE /prayers/:id -> borrar
-app.delete("/prayers/:id", requireAdminKey, async (req: Request, res: Response) => {
+app.delete("/prayers/:id", async (req: Request, res: Response) => {
   try {
     const id = String(req.params.id || "");
 
