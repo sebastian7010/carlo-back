@@ -21,8 +21,9 @@ model Saint {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  miracles Miracle[]
-    continent String?
+  miracles      Miracle[]
+  translations  SaintTranslation[]
+  continent String?
   lat       Float?
   lng       Float?
 }
@@ -44,10 +45,14 @@ model Miracle {
 
   saint     Saint    @relation(fields: [saintId], references: [id], onDelete: Cascade)
 
+  translations MiracleTranslation[]
+
   @@index([saintId])
 }
 
 model Prayer {
+  translations PrayerTranslation[]
+
   id        String   @id @default(cuid())
   title     String
   content   String
@@ -59,3 +64,54 @@ model Prayer {
   occasion  String?
 }
 
+
+
+model SaintTranslation {
+  id        String  @id @default(cuid())
+  saintId   String
+  lang      String  // "es" | "en" | "hi" ...
+
+  name      String?
+  title     String?
+  biography String? @db.Text
+
+  saint     Saint   @relation(fields: [saintId], references: [id], onDelete: Cascade)
+
+  @@unique([saintId, lang], name: "saintId_lang")
+  @@index([lang])
+}
+
+model MiracleTranslation {
+  id        String  @id @default(cuid())
+  miracleId String
+  lang      String
+
+  title     String?
+  type      String?
+  date      String?
+  location  String?
+  witnesses String?
+  details   String?
+
+  miracle   Miracle @relation(fields: [miracleId], references: [id], onDelete: Cascade)
+
+  @@unique([miracleId, lang], name: "miracleId_lang")
+  @@index([lang])
+}
+
+model PrayerTranslation {
+  id       String @id @default(cuid())
+  prayerId String
+  lang     String
+
+  title    String?
+  content  String?
+  category String?
+  saintName String?
+  occasion  String?
+
+  prayer   Prayer @relation(fields: [prayerId], references: [id], onDelete: Cascade)
+
+  @@unique([prayerId, lang], name: "prayerId_lang")
+  @@index([lang])
+}
