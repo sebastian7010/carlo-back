@@ -30131,28 +30131,41 @@ app.get("/saints/:slug", async (req, res) => {
   }
 });
 app.post("/saints", async (req, res) => {
-  const { slug, name, country, continent, lat, lng } = req.body ?? {};
+  const {
+    slug,
+    name,
+    country,
+    title,
+    feastDay,
+    imageUrl,
+    biography
+  } = req.body ?? {};
   if (!slug || !name) {
-    return res.status(400).json({ error: "slug y name son obligatorios" });
+    return res.status(400).json({ error: "slug y name son requeridos" });
   }
-  const latIsSet = lat !== void 0;
-  const lngIsSet = lng !== void 0;
-  if (latIsSet !== lngIsSet) {
-    return res.status(400).json({ error: "En POST, lat y lng deben enviarse juntos" });
-  }
-  const latNum = !latIsSet ? null : lat === null || lat === "" ? null : Number(lat);
-  const lngNum = !lngIsSet ? null : lng === null || lng === "" ? null : Number(lng);
-  if (latNum === null !== (lngNum === null)) {
-    return res.status(400).json({ error: "lat y lng deben ser ambos null o ambos n\xFAmeros" });
-  }
-  if (latNum !== null && Number.isNaN(latNum) || lngNum !== null && Number.isNaN(lngNum)) {
-    return res.status(400).json({ error: "lat y lng deben ser n\xFAmeros" });
-  }
-  if (latNum !== null && (latNum < -90 || latNum > 90)) {
-    return res.status(400).json({ error: "lat fuera de rango (-90 a 90)" });
-  }
-  if (lngNum !== null && (lngNum < -180 || lngNum > 180)) {
-    return res.status(400).json({ error: "lng fuera de rango (-180 a 180)" });
+  const continentRaw = req.body?.continent;
+  const latRaw = req.body?.lat;
+  const lngRaw = req.body?.lng;
+  const continentVal = typeof continentRaw === "string" && continentRaw.trim() ? continentRaw.trim() : null;
+  const latIsSet = latRaw !== void 0;
+  const lngIsSet = lngRaw !== void 0;
+  const latVal = !latIsSet ? null : latRaw === null || latRaw === "" ? null : Number(latRaw);
+  const lngVal = !lngIsSet ? null : lngRaw === null || lngRaw === "" ? null : Number(lngRaw);
+  const safeLat = latVal !== null && Number.isFinite(latVal) ? latVal : null;
+  const safeLng = lngVal !== null && Number.isFinite(lngVal) ? lngVal : null;
+  if (latIsSet || lngIsSet) {
+    if (latIsSet !== lngIsSet) {
+      return res.status(400).json({ error: "Debes enviar lat y lng juntos" });
+    }
+    if (safeLat === null !== (safeLng === null)) {
+      return res.status(400).json({ error: "lat y lng deben ser ambos null o ambos n\xFAmeros" });
+    }
+    if (safeLat !== null && (safeLat < -90 || safeLat > 90)) {
+      return res.status(400).json({ error: "lat fuera de rango (-90 a 90)" });
+    }
+    if (safeLng !== null && (safeLng < -180 || safeLng > 180)) {
+      return res.status(400).json({ error: "lng fuera de rango (-180 a 180)" });
+    }
   }
   try {
     const saint = await prisma.saint.create({
@@ -30160,12 +30173,13 @@ app.post("/saints", async (req, res) => {
         slug: String(slug).trim(),
         name: String(name).trim(),
         country: country ? String(country).trim() : null,
+        title: title ? String(title).trim() : null,
+        feastDay: feastDay ? String(feastDay).trim() : null,
+        imageUrl: imageUrl ? String(imageUrl).trim() : null,
+        biography: biography ? String(biography).trim() : null,
         continent: continentVal,
-        lat: latNum,
-        lng: lngNum,
-        continent: continent ? String(continent).trim() : null,
-        lat: latNum,
-        lng: lngNum
+        lat: safeLat,
+        lng: safeLng
       }
     });
     return res.status(201).json(saint);
@@ -30178,9 +30192,9 @@ app.post("/saints", async (req, res) => {
 app.patch("/saints/:id", async (req, res) => {
   const { id } = req.params;
   const { slug, name, country, title, feastDay, imageUrl, biography } = req.body ?? {};
-  const continentRaw = req.body.continent;
-  const latRaw = req.body.lat;
-  const lngRaw = req.body.lng;
+  const continentRaw = (req.body ?? {}).continent;
+  const latRaw = (req.body ?? {}).lat;
+  const lngRaw = (req.body ?? {}).lng;
   const continent = continentRaw === void 0 ? void 0 : typeof continentRaw === "string" && continentRaw.trim() ? continentRaw.trim() : null;
   const lat = latRaw === void 0 ? void 0 : latRaw === null || latRaw === "" ? null : Number(latRaw);
   const lng = lngRaw === void 0 ? void 0 : lngRaw === null || lngRaw === "" ? null : Number(lngRaw);
