@@ -77,34 +77,55 @@ app.get("/saints/:slug", async (req: Request, res: Response) => {
 });
 
 app.post("/saints", async (req: Request, res: Response) => {
-  const { slug, name, country, continent, lat, lng } = req.body ?? {}
+    const {
+    slug,
+    name,
+    country,
+    title,
+    feastDay,
+    imageUrl,
+    biography,
+  } = req.body ?? {};
+
 
   if (!slug || !name) {
-    return res.status(400).json({ error: "slug y name son obligatorios" })
+    return res.status(400).json({ error: "slug y name son requeridos" });
+  }
+  const continentRaw = req.body?.continent;
+  const latRaw = req.body?.lat;
+  const lngRaw = req.body?.lng;
+
+  // Para CREATE: si no viene o viene vacío -> null
+  const continentVal =
+    typeof continentRaw === "string" && continentRaw.trim()
+      ? continentRaw.trim()
+      : null;
+
+  const latIsSet = latRaw !== undefined;
+  const lngIsSet = lngRaw !== undefined;
+
+  const latVal = !latIsSet ? null : (latRaw === null || latRaw === "" ? null : Number(latRaw));
+  const lngVal = !lngIsSet ? null : (lngRaw === null || lngRaw === "" ? null : Number(lngRaw));
+
+  // Seguridad: si mandan basura, no guardes NaN/Infinity
+  const safeLat = latVal !== null && Number.isFinite(latVal) ? latVal : null;
+  const safeLng = lngVal !== null && Number.isFinite(lngVal) ? lngVal : null;
+
+  if (latIsSet || lngIsSet) {
+    if (latIsSet !== lngIsSet) {
+      return res.status(400).json({ error: "Debes enviar lat y lng juntos" });
+    }
+    if ((safeLat === null) !== (safeLng === null)) {
+      return res.status(400).json({ error: "lat y lng deben ser ambos null o ambos números" });
+    }
+    if (safeLat !== null && (safeLat < -90 || safeLat > 90)) {
+      return res.status(400).json({ error: "lat fuera de rango (-90 a 90)" });
+    }
+    if (safeLng !== null && (safeLng < -180 || safeLng > 180)) {
+      return res.status(400).json({ error: "lng fuera de rango (-180 a 180)" });
+    }
   }
 
-  // --- lat/lng: deben venir juntos ---
-  const latIsSet = lat !== undefined
-  const lngIsSet = lng !== undefined
-  if (latIsSet !== lngIsSet) {
-    return res.status(400).json({ error: "En POST, lat y lng deben enviarse juntos" })
-  }
-
-  const latNum = !latIsSet ? null : (lat === null || lat === "" ? null : Number(lat))
-  const lngNum = !lngIsSet ? null : (lng === null || lng === "" ? null : Number(lng))
-
-  if ((latNum === null) !== (lngNum === null)) {
-    return res.status(400).json({ error: "lat y lng deben ser ambos null o ambos números" })
-  }
-  if ((latNum !== null && Number.isNaN(latNum)) || (lngNum !== null && Number.isNaN(lngNum))) {
-    return res.status(400).json({ error: "lat y lng deben ser números" })
-  }
-  if (latNum !== null && (latNum < -90 || latNum > 90)) {
-    return res.status(400).json({ error: "lat fuera de rango (-90 a 90)" })
-  }
-  if (lngNum !== null && (lngNum < -180 || lngNum > 180)) {
-    return res.status(400).json({ error: "lng fuera de rango (-180 a 180)" })
-  }
 
   try {
     const saint = await prisma.saint.create({
@@ -112,46 +133,51 @@ app.post("/saints", async (req: Request, res: Response) => {
         slug: String(slug).trim(),
         name: String(name).trim(),
         country: country ? String(country).trim() : null,
-        continent: continentVal,
-        lat: latNum,
-        lng: lngNum,
-        continent: continent ? String(continent).trim() : null,
-        lat: latNum,
-        lng: lngNum,
+        title: title ? String(title).trim() : null,
+        feastDay: feastDay ? String(feastDay).trim() : null,
+        imageUrl: imageUrl ? String(imageUrl).trim() : null,
+        biography: biography ? String(biography).trim() : null,
+                continent: continentVal,
+        lat: safeLat,
+        lng: safeLng,
+
       } as any,
-    })
-    return res.status(201).json(saint)
+    });
+
+    return res.status(201).json(saint);
   } catch (e: any) {
-    console.error(e)
-    if (e?.code === "P2002") return res.status(409).json({ error: "slug ya existe" })
-    return res.status(500).json({ error: "error creando santo" })
+    console.error(e);
+    if (e?.code === "P2002") return res.status(409).json({ error: "slug ya existe" });
+    return res.status(500).json({ error: "error creando santo" });
   }
-})
+});
+
 
 app.patch("/saints/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
   const { slug, name, country, title, feastDay, imageUrl, biography } = req.body ?? {};
 
-
-  
-  const continentRaw = req.body.continent;
-  const latRaw = req.body.lat;
-  const lngRaw = req.body.lng;
+  // === coords + continent (PATCH) ===
+  const continentRaw = (req.body ?? {}).continent
+  const latRaw = (req.body ?? {}).lat
+  const lngRaw = (req.body ?? {}).lng
 
   const continent =
     continentRaw === undefined
       ? undefined
-      : (typeof continentRaw === "string" && continentRaw.trim() ? continentRaw.trim() : null);
+      : (typeof continentRaw === "string" && continentRaw.trim()
+          ? continentRaw.trim()
+          : null)
 
   const lat =
     latRaw === undefined
       ? undefined
-      : (latRaw === null || latRaw === "" ? null : Number(latRaw));
+      : (latRaw === null || latRaw === "" ? null : Number(latRaw))
 
   const lng =
     lngRaw === undefined
       ? undefined
-      : (lngRaw === null || lngRaw === "" ? null : Number(lngRaw));
+      : (lngRaw === null || lngRaw === "" ? null : Number(lngRaw))
 
   // Validaciones (solo si intentan setear lat/lng)
   const latIsSet = lat !== undefined;
