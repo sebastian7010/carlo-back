@@ -36942,8 +36942,9 @@ Incluye siempre: "Esto es orientaci\xF3n general y no reemplaza a un sacerdote o
       const answer = resp.output_text ?? "";
       return res.json({ answer });
     } catch (e) {
-      console.error("POST /ai/chat error:", e);
-      return res.status(500).json({ error: "AI_CHAT_FAILED" });
+      console.error("POST /ai/chat error:", e?.status, e?.message, e?.error?.message, e);
+      const status = e?.status === 429 ? 429 : 500;
+      return res.status(status).json({ error: "AI_CHAT_FAILED", detail: e?.message || e?.error?.message || "unknown" });
     }
   });
 }
