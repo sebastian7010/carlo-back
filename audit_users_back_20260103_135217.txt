@@ -1,0 +1,353 @@
+==== TREE (top) ====
+total 234
+drwxr-xr-x 1 sebas 197609     0 Jan  3 13:52 ./
+drwxr-xr-x 1 sebas 197609     0 Dec 30 18:12 ../
+-rw-r--r-- 1 sebas 197609   283 Jan  2 22:49 .env
+drwxr-xr-x 1 sebas 197609     0 Jan  3 12:52 .git/
+-rw-r--r-- 1 sebas 197609   146 Dec 30 18:12 .gitignore
+-rw-r--r-- 1 sebas 197609    21 Jan  3 13:52 audit_users_back_20260103_135217.txt
+drwxr-xr-x 1 sebas 197609     0 Jan  3 01:29 data/
+drwxr-xr-x 1 sebas 197609     0 Dec 30 23:14 dist/
+drwxr-xr-x 1 sebas 197609     0 Dec 30 20:05 node_modules/
+-rw-r--r-- 1 sebas 197609   948 Dec 30 18:12 package.json
+-rw-r--r-- 1 sebas 197609 97463 Dec 30 21:09 package-lock.json
+-rw-r--r-- 1 sebas 197609  2595 Dec 30 21:35 patch_ai_guard.py
+drwxr-xr-x 1 sebas 197609     0 Dec 30 18:12 prisma/
+-rw-r--r-- 1 sebas 197609   408 Dec 30 18:12 prisma.config.ts
+-rw-r--r-- 1 sebas 197609 29826 Dec 30 18:12 run.log
+-rw-r--r-- 1 sebas 197609    98 Dec 30 18:12 run_all.sh
+-rw-r--r-- 1 sebas 197609 25668 Dec 30 18:12 saints.json
+drwxr-xr-x 1 sebas 197609     0 Dec 30 18:12 scripts/
+drwxr-xr-x 1 sebas 197609     0 Jan  3 00:58 src/
+-rw-r--r-- 1 sebas 197609   353 Dec 30 18:12 tsconfig.json
+
+==== ROUTES / AUTH / USERS / CHATS keywords (top hits only) ====
+./dist/server.js:307:          return val.stack || val.message;
+./dist/server.js:420:      if (typeof navigator !== "undefined" && navigator.userAgent && navigator.userAgent.toLowerCase().match(/(edge|trident)\/(\d+)/)) {
+./dist/server.js:426:      // https://developer.mozilla.org/en-US/docs/Tools/Web_Console#Styling_messages
+./dist/server.js:427:      typeof navigator !== "undefined" && navigator.userAgent && (m = navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/)) && parseInt(m[1], 10) >= 31 || // Double check webkit in userAgent just in case we are in a worker
+./dist/server.js:428:      typeof navigator !== "undefined" && navigator.userAgent && navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/);
+./dist/server.js:485:        return "[UnexpectedJSONParseError]: " + error.message;
+./dist/server.js:693:    function convertDataDescriptorToAccessor(obj, prop, message) {
+./dist/server.js:718:      if (this.message) {
+./dist/server.js:719:        str2 += " deprecated " + this.message;
+./dist/server.js:733:      function deprecate(message) {
+./dist/server.js:734:        log.call(deprecate, message);
+./dist/server.js:763:    function log(message, site) {
+./dist/server.js:802:      var msg = message;
+./dist/server.js:888:    function wrapfunction(fn, message) {
+./dist/server.js:900:        "message",
+./dist/server.js:902:        '"use strict"\nreturn function (' + args + ") {log.call(deprecate, message, site)\nreturn fn.apply(this, arguments)\n}"
+./dist/server.js:903:      )(fn, log, this, message, site);
+./dist/server.js:906:    function wrapproperty(obj, prop, message) {
+./dist/server.js:922:        descriptor = convertDataDescriptorToAccessor(obj, prop, message);
+./dist/server.js:928:          log.call(deprecate, message, site);
+./dist/server.js:934:          log.call(deprecate, message, site);
+./dist/server.js:940:    function DeprecationError(namespace, message, stack) {
+./dist/server.js:946:      Object.defineProperty(error, "message", {
+./dist/server.js:949:        value: message,
+./dist/server.js:1029:      "401": "Unauthorized",
+./dist/server.js:1079:    status.message = codes;
+./dist/server.js:1104:        var message = codes2[code];
+./dist/server.js:1106:        map[message.toLowerCase()] = status2;
+./dist/server.js:1115:    function getStatusCode(message) {
+./dist/server.js:1116:      var msg = message.toLowerCase();
+./dist/server.js:1118:        throw new Error('invalid status message: "' + message + '"');
+./dist/server.js:1123:      if (!Object.prototype.hasOwnProperty.call(status.message, code)) {
+./dist/server.js:1126:      return status.message[code];
+./dist/server.js:1243:      if (typeof status !== "number" || !statuses.message[status] && (status < 400 || status >= 600)) {
+./dist/server.js:1248:        err = HttpError ? new HttpError(msg) : new Error(msg || statuses.message[status]);
+./dist/server.js:1271:      function ClientError(message) {
+./dist/server.js:1272:        var msg = message != null ? message : statuses.message[code];
+./dist/server.js:1276:        Object.defineProperty(err, "message", {
+./dist/server.js:1310:      function ServerError(message) {
+./dist/server.js:1311:        var msg = message != null ? message : statuses.message[code];
+./dist/server.js:1315:        Object.defineProperty(err, "message", {
+./dist/server.js:1346:        var name = toIdentifier(statuses.message[code]);
+./dist/server.js:4820:      // GBK (~22000 chars) is an extension of CP936 that added user-mapped chars and some other.
+./dist/server.js:5293:        if (!ICONV_ENCODING_MESSAGE_REGEXP.test(e.message)) throw e;
+./dist/server.js:5770:      "application/activemessage": {
+./dist/server.js:5882:      "application/at+jwt": {
+./dist/server.js:5919:      "application/atsc-dynamic-event-message": {
+./dist/server.js:5939:      "application/auth-policy+xml": {
+./dist/server.js:6222:      "application/dns-message": {
+./dist/server.js:6233:      "application/dpop+jwt": {
+./dist/server.js:6255:      "application/eat+jwt": {
+./dist/server.js:6356:      "application/entity-statement+jwt": {
+./dist/server.js:6647:      "application/jwk-set+jwt": {
+./dist/server.js:6650:      "application/jwt": {
+./dist/server.js:6685:      "application/logout+jwt": {
+./dist/server.js:6756:      "application/mbms-deregister+xml": {
+./dist/server.js:6780:      "application/mbms-register+xml": {
+./dist/server.js:6784:      "application/mbms-register-response+xml": {
+./dist/server.js:6792:      "application/mbms-user-service-description+xml": {
+./dist/server.js:6964:      "application/oauth-authz-req+jwt": {
+./dist/server.js:6967:      "application/oblivious-dns-message": {
+./dist/server.js:7169:      "application/provided-claims+jwt": {
+./dist/server.js:7271:      "application/resolve-response+jwt": {
+./dist/server.js:7412:      "application/secevent+jwt": {
+./dist/server.js:7459:      "application/session-info": {
+./dist/server.js:7495:      "application/simple-message-summary": {
+./dist/server.js:7669:      "application/tnauthlist": {
+./dist/server.js:7675:      "application/token-introspection+jwt": {
+./dist/server.js:7694:      "application/trust-mark+jwt": {
+./dist/server.js:7697:      "application/trust-mark-delegation+jwt": {
+./dist/server.js:7752:      "application/vc+jwt": {
+./dist/server.js:7877:      "application/vnd.3gpp.mcdata-user-profile+xml": {
+./dist/server.js:7921:      "application/vnd.3gpp.mcptt-user-profile+xml": {
+./dist/server.js:7957:      "application/vnd.3gpp.mcvideo-user-profile+xml": {
+./dist/server.js:8018:      "application/vnd.3gpp.seal-user-profile-info+xml": {
+./dist/server.js:8082:      "application/vnd.acm.chatbot+json": {
+./dist/server.js:9175:      "application/vnd.ga4gh.passport+jwt": {
+./dist/server.js:9364:      "application/vnd.groove-identity-message": {
+./dist/server.js:9372:      "application/vnd.groove-tool-message": {
+./dist/server.js:9625:      "application/vnd.iptc.g2.newsmessage+xml": {
+./dist/server.js:10493:      "application/vnd.oipf.mippvcontrolmessage+xml": {
+./dist/server.js:10512:      "application/vnd.oipf.userprofile+xml": {
+./dist/server.js:10591:      "application/vnd.oma.cab-user-prefs+xml": {
+./dist/server.js:10651:      "application/vnd.oma.scidm.messages+xml": {
+./dist/server.js:10765:      "application/vnd.openxmlformats-officedocument.presentationml.commentauthors+xml": {
+./dist/server.js:10931:      "application/vnd.openxmlformats-officedocument.spreadsheetml.usernames+xml": {
+./dist/server.js:11411:      "application/vnd.sigrok.session": {
+./dist/server.js:11990:      "application/vp+jwt": {
+./dist/server.js:12064:      "application/x-authorware-bin": {
+./dist/server.js:12068:      "application/x-authorware-map": {
+./dist/server.js:12072:      "application/x-authorware-seg": {
+./dist/server.js:12117:      "application/x-chat": {
+./dist/server.js:12119:        extensions: ["chat"]
+./dist/server.js:12445:      "application/x-pki-message": {
+./dist/server.js:13885:      "message/bhttp": {
+./dist/server.js:13888:      "message/cpim": {
+./dist/server.js:13891:      "message/delivery-status": {
+./dist/server.js:13894:      "message/disposition-notification": {
+./dist/server.js:13900:      "message/external-body": {
+./dist/server.js:13903:      "message/feedback-report": {
+./dist/server.js:13906:      "message/global": {
+./dist/server.js:13910:      "message/global-delivery-status": {
+./dist/server.js:13914:      "message/global-disposition-notification": {
+./dist/server.js:13918:      "message/global-headers": {
+./dist/server.js:13922:      "message/http": {
+./dist/server.js:13926:      "message/imdn+xml": {
+./dist/server.js:13930:      "message/mls": {
+./dist/server.js:13933:      "message/news": {
+./dist/server.js:13936:      "message/ohttp-req": {
+./dist/server.js:13939:      "message/ohttp-res": {
+./dist/server.js:13942:      "message/partial": {
+./dist/server.js:13946:      "message/rfc822": {
+./dist/server.js:13951:      "message/s-http": {
+./dist/server.js:13954:      "message/sip": {
+./dist/server.js:13957:      "message/sipfrag": {
+./dist/server.js:13960:      "message/tracking-status": {
+./dist/server.js:13963:      "message/vnd.si.simp": {
+./dist/server.js:13966:      "message/vnd.wfa.wsc": {
+./dist/server.js:14197:      "multipart/voice-message": {
+./dist/server.js:14423:        extensions: ["ttl"]
+./dist/server.js:15639:            message: e.message,
+./dist/server.js:15667:          message: e.message.replace(JSON_SYNTAX_REGEXP, function(placeholder) {
+./dist/server.js:15682:        if (key !== "stack" && key !== "message") {
+./dist/server.js:15686:      error.stack = obj.stack.replace(error.message, obj.message);
+./dist/server.js:15687:      error.message = obj.message;
+./dist/server.js:18437:    function createHtmlDocument(message) {
+./dist/server.js:18438:      var body = escapeHtml(message).replaceAll("\n", "<br>").replaceAll("  ", " &nbsp;");
+./dist/server.js:18494:      return msg || statuses.message[status];
+./dist/server.js:18519:    function send(req, res, status, headers, message) {
+./dist/server.js:18521:        var body = createHtmlDocument(message);
+./dist/server.js:18524:          res.statusMessage = statuses.message[status];
+./dist/server.js:19771:      constructor(message, originalPath) {
+./dist/server.js:19772:        let text = message;
+./dist/server.js:20217:          err.message = "Failed to decode param '" + val + "'";
+./dist/server.js:22071:// node_modules/express/node_modules/cookie-signature/index.js
+./dist/server.js:22072:var require_cookie_signature = __commonJS({
+./dist/server.js:22073:  "node_modules/express/node_modules/cookie-signature/index.js"(exports2) {
+./dist/server.js:22081:      if ("string" != typeof input) throw new TypeError("Signed cookie string must be provided.");
+./dist/server.js:22089:// node_modules/cookie/index.js
+./dist/server.js:22090:var require_cookie = __commonJS({
+./dist/server.js:22091:  "node_modules/cookie/index.js"(exports2) {
+./dist/server.js:22097:    var cookieNameRegExp = /^[!#$%&'*+\-.^_`|~0-9A-Za-z]+$/;
+./dist/server.js:22098:    var cookieValueRegExp = /^("?)[\u0021\u0023-\u002B\u002D-\u003A\u003C-\u005B\u005D-\u007E]*\1$/;
+./dist/server.js:22158:      if (!cookieNameRegExp.test(name)) {
+./dist/server.js:22162:      if (!cookieValueRegExp.test(value)) {
+./dist/server.js:22186:      if (opt.expires) {
+./dist/server.js:22187:        var expires = opt.expires;
+./dist/server.js:22188:        if (!isDate(expires) || isNaN(expires.valueOf())) {
+./dist/server.js:22189:          throw new TypeError("option expires is invalid");
+./dist/server.js:22191:        str2 += "; Expires=" + expires.toUTCString();
+./dist/server.js:22314:      var msg = statuses.message[status] || String(status);
+./dist/server.js:22826:    var sign = require_cookie_signature().sign;
+./dist/server.js:22830:    var cookie = require_cookie();
+./dist/server.js:22974:      var body = statuses.message[statusCode] || String(statusCode);
+./dist/server.js:23104:      const opts = { path: "/", ...options, expires: /* @__PURE__ */ new Date(1) };
+./dist/server.js:23106:      return this.cookie(name, "", opts);
+./dist/server.js:23108:    res.cookie = function(name, value, options) {
+./dist/server.js:23113:        throw new Error('cookieParser("secret") required for signed cookies');
+./dist/server.js:23122:          opts.expires = new Date(Date.now() + maxAge);
+./dist/server.js:23129:      this.append("Set-Cookie", cookie.serialize(name, String(val), opts));
+./dist/server.js:23155:          body = statuses.message[status] + ". Redirecting to " + address;
+./dist/server.js:23159:          body = "<p>" + statuses.message[status] + ". Redirecting to " + u + "</p>";
+./dist/server.js:23868:    function _warn(message) {
+./dist/server.js:23869:      console.error(`[dotenv@${version}][WARN] ${message}`);
+./dist/server.js:23871:    function _debug(message) {
+./dist/server.js:23872:      console.log(`[dotenv@${version}][DEBUG] ${message}`);
+./dist/server.js:23874:    function _log(message) {
+./dist/server.js:23875:      console.log(`[dotenv@${version}] ${message}`);
+./dist/server.js:23991:            _debug(`Failed to load ${path4} ${e.message}`);
+./dist/server.js:24008:              _debug(`Failed to load ${filePath} ${e.message}`);
+./dist/server.js:24036:      const authTag = ciphertext.subarray(-16);
+./dist/server.js:24040:        aesgcm.setAuthTag(authTag);
+./dist/server.js:24044:        const invalidKeyLength = error.message === "Invalid key length";
+./dist/server.js:24045:        const decryptionFailed = error.message === "Unsupported state or unable to authenticate data";
+./dist/server.js:24267:      qc.exports = { name: "@prisma/internals", version: "6.19.1", description: "This package is intended for Prisma's internal use", main: "dist/index.js", types: "dist/index.d.ts", repository: { type: "git", url: "https://github.com/prisma/prisma.git", directory: "packages/internals" }, homepage: "https://www.prisma.io", author: "Tim Suchanek <suchanek@prisma.io>", bugs: "https://github.com/prisma/prisma/issues", license: "Apache-2.0", scripts: { dev: "DEV=true tsx helpers/build.ts", build: "tsx helpers/build.ts", test: "dotenv -e ../../.db.env -- jest --silent", prepublishOnly: "pnpm run build" }, files: ["README.md", "dist", "!**/libquery_engine*", "!dist/get-generators/engines/*", "scripts"], devDependencies: { "@babel/helper-validator-identifier": "7.25.9", "@opentelemetry/api": "1.9.0", "@swc/core": "1.11.5", "@swc/jest": "0.2.37", "@types/babel__helper-validator-identifier": "7.15.2", "@types/jest": "29.5.14", "@types/node": "18.19.76", "@types/resolve": "1.20.6", archiver: "6.0.2", "checkpoint-client": "1.1.33", "cli-truncate": "4.0.0", dotenv: "16.5.0", empathic: "2.0.0", "escape-string-regexp": "5.0.0", execa: "8.0.1", "fast-glob": "3.3.3", "find-up": "7.0.0", "fp-ts": "2.16.9", "fs-extra": "11.3.0", "global-directory": "4.0.0", globby: "11.1.0", "identifier-regex": "1.0.0", "indent-string": "4.0.0", "is-windows": "1.0.2", "is-wsl": "3.1.0", jest: "29.7.0", "jest-junit": "16.0.0", kleur: "4.1.5", "mock-stdin": "1.0.0", "new-github-issue-url": "0.2.1", "node-fetch": "3.3.2", "npm-packlist": "5.1.3", open: "7.4.2", "p-map": "4.0.0", resolve: "1.22.10", "string-width": "7.2.0", "strip-indent": "4.0.0", "temp-dir": "2.0.0", tempy: "1.0.1", "terminal-link": "4.0.0", tmp: "0.2.3", "ts-pattern": "5.6.2", "ts-toolbelt": "9.6.0", typescript: "5.4.5", yarn: "1.22.22" }, dependencies: { "@prisma/config": "workspace:*", "@prisma/debug": "workspace:*", "@prisma/dmmf": "workspace:*", "@prisma/driver-adapter-utils": "workspace:*", "@prisma/engines": "workspace:*", "@prisma/fetch-engine": "workspace:*", "@prisma/generator": "workspace:*", "@prisma/generator-helper": "workspace:*", "@prisma/get-platform": "workspace:*", "@prisma/prisma-schema-wasm": "7.1.1-3.c2990dca591cba766e3b7ef5d9e8a84796e47ab7", "@prisma/schema-engine-wasm": "7.1.1-3.c2990dca591cba766e3b7ef5d9e8a84796e47ab7", "@prisma/schema-files-loader": "workspace:*", arg: "5.0.2", prompts: "2.4.2" }, peerDependencies: { typescript: ">=5.1.0" }, peerDependenciesMeta: { typescript: { optional: true } }, sideEffects: false };
+./dist/server.js:24270:      Qc.exports = { name: "@prisma/engines-version", version: "7.1.1-3.c2990dca591cba766e3b7ef5d9e8a84796e47ab7", main: "index.js", types: "index.d.ts", license: "Apache-2.0", author: "Tim Suchanek <suchanek@prisma.io>", prisma: { enginesVersion: "c2990dca591cba766e3b7ef5d9e8a84796e47ab7" }, repository: { type: "git", url: "https://github.com/prisma/engines-wrapper.git", directory: "packages/engines-version" }, devDependencies: { "@types/node": "18.19.76", typescript: "4.9.5" }, files: ["index.js", "index.d.ts"], scripts: { build: "tsc -d" } };
+./dist/server.js:24398:          n && ot(`Failed to load ${l} ${u.message}`), o = u;
+./dist/server.js:24415:          let a = s instanceof RangeError, l = s.message === "Invalid key length", u = s.message === "Unsupported state or unable to authenticate data";
+./dist/server.js:24448:        else if (e.user && e.repo) r = `https://github.com/${e.user}/${e.repo}`;
+./dist/server.js:24449:        else throw new Error("You need to specify either the `repoUrl` option or both the `user` and `repo` options");
+./dist/server.js:24950:    var Eg = globalThis.navigator?.userAgent?.includes("jsdom") === true;
+./dist/server.js:24955:    var Xr = globalThis.navigator?.userAgentData?.platform;
+./dist/server.js:24956:    var Tg = Xr === "macOS" || globalThis.navigator?.platform === "MacIntel" || globalThis.navigator?.userAgent?.includes(" Mac ") === true || globalThis.process?.platform === "darwin";
+./dist/server.js:24958:    var Rg = Xr === "Linux" || globalThis.navigator?.platform?.startsWith("Linux") === true || globalThis.navigator?.userAgent?.includes(" Linux ") === true || globalThis.process?.platform === "linux";
+./dist/server.js:24960:    var Cg = Xr === "Android" || globalThis.navigator?.platform === "Android" || globalThis.navigator?.userAgent?.includes(" Android ") === true || globalThis.process?.platform === "android";
+./dist/server.js:25061:      registeredErrors = [];
+./dist/server.js:25063:        return this.registeredErrors[r];
+./dist/server.js:25065:      registerNewError(r) {
+./dist/server.js:25067:        for (; this.registeredErrors[t] !== void 0; ) t++;
+./dist/server.js:25068:        return this.registeredErrors[t] = { error: r }, t;
+./dist/server.js:25082:          let i = e.registerNewError(n);
+./dist/server.js:25093:          let i = e.registerNewError(n);
+./dist/server.js:25142:      let r = e.e, t = (a) => `Prisma cannot find the required \`${a}\` system library in your system`, n = r.message.includes("cannot open shared object file"), i = `Please refer to the documentation about Prisma's system requirements: ${wi("https://pris.ly/d/system-requirements")}`, o = `Unable to require(\`${Ce(e.id)}\`).`, s = hr({ message: r.message, code: r.code }).with({ code: "ENOENT" }, () => "File does not exist.").when(({ message: a }) => n && a.includes("libz"), () => `${t("libz")}. Please install it and try again.`).when(({ message: a }) => n && a.includes("libgcc_s"), () => `${t("libgcc_s")}. Please install it and try again.`).when(({ message: a }) => n && a.includes("libssl"), () => {
+./dist/server.js:25145:      }).when(({ message: a }) => a.includes("GLIBC"), () => `Prisma has detected an incompatible version of the \`glibc\` C standard library installed in your system. This probably means your system may be too old to run Prisma. ${i}`).when(({ message: a }) => e.platformInfo.platform === "linux" && a.includes("symbol not found"), () => `The Prisma engines are not compatible with your system ${e.platformInfo.originalDistro} on (${e.platformInfo.archFromUname}) which uses the \`${e.platformInfo.binaryTarget}\` binaryTarget by default. ${i}`).otherwise(() => `The Prisma engines do not seem to be compatible with your system. ${i}`);
+./dist/server.js:25149:Details: ${r.message}`;
+./dist/server.js:25264:      return Ds(n?.path, r) || (i = Is(r)), !n && !i && $i("No Environment variables loaded"), i?.dotenvResult.error ? console.error(ce(W("Schema Env Error: ")) + i.dotenvResult.error) : { message: [n?.message, i?.message].filter(Boolean).join(`
+./dist/server.js:25296:        return { dotenvResult: Cs(r), message: Ce(`Environment variables loaded from ${xr.default.relative(process.cwd(), e)}`), path: e };
+./dist/server.js:26478:    function bd({ message: e, originalMethod: r, isPanic: t, callArguments: n }) {
+./dist/server.js:26479:      return { functionName: `prisma.${r}()`, message: e, isPanic: t ?? false, callArguments: n };
+./dist/server.js:26481:    function Ed({ callsite: e, message: r, originalMethod: t, isPanic: n, callArguments: i }, o) {
+
+==== PRISMA (if any) ====
+total 32
+drwxr-xr-x 1 sebas 197609    0 Dec 30 18:12 ./
+drwxr-xr-x 1 sebas 197609    0 Jan  3 13:52 ../
+drwxr-xr-x 1 sebas 197609    0 Dec 30 18:12 migrations/
+-rw-r--r-- 1 sebas 197609 2631 Dec 30 18:12 schema.prisma
+-rw-r--r-- 1 sebas 197609 1287 Dec 30 18:12 schema.prisma.bak.20251220_034248
+-rw-r--r-- 1 sebas 197609 1247 Dec 30 18:12 schema.prisma.bak.20251220_041311
+-rw-r--r-- 1 sebas 197609 1247 Dec 30 18:12 schema.prisma.bak_20251220_062708
+-rw-r--r-- 1 sebas 197609    0 Dec 30 18:12 schema.prisma.bak_20251220_063509
+-rw-r--r-- 1 sebas 197609 1247 Dec 30 18:12 schema.prisma.bak_20251220_064407
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Saint {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  name      String
+  country   String?
+
+  title     String?
+  feastDay  String?
+  imageUrl  String?
+  biography String?  @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  miracles      Miracle[]
+  translations  SaintTranslation[]
+  continent String?
+  lat       Float?
+  lng       Float?
+}
+
+
+model Miracle {
+  id        String   @id @default(cuid())
+  saintId   String
+  title     String
+  type      String?  // ej: "Curación", "Eucarístico", "Aparición"
+  date      String?  // por ahora string (luego lo pasamos a Date si quieres)
+  location  String?
+  witnesses String?
+  approved  Boolean  @default(false)
+  details   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  saint     Saint    @relation(fields: [saintId], references: [id], onDelete: Cascade)
+
+  translations MiracleTranslation[]
+
+  @@index([saintId])
+}
+
+model Prayer {
+  translations PrayerTranslation[]
+
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  category  String?
+  approved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  saintName String?
+  occasion  String?
+}
+
+
+
+model SaintTranslation {
+  id        String  @id @default(cuid())
+  saintId   String
+  lang      String  // "es" | "en" | "hi" ...
+
+  name      String?
+  title     String?
+  biography String? @db.Text
+
+  saint     Saint   @relation(fields: [saintId], references: [id], onDelete: Cascade)
+
+  @@unique([saintId, lang], name: "saintId_lang")
+  @@index([lang])
+}
+
+model MiracleTranslation {
+  id        String  @id @default(cuid())
+  miracleId String
+  lang      String
+
+  title     String?
+  type      String?
+  date      String?
+  location  String?
+  witnesses String?
+  details   String?
+
+  miracle   Miracle @relation(fields: [miracleId], references: [id], onDelete: Cascade)
+
+  @@unique([miracleId, lang], name: "miracleId_lang")
+  @@index([lang])
+}
+
+model PrayerTranslation {
+  id       String @id @default(cuid())
+  prayerId String
+  lang     String
+
+  title    String?
+  content  String?
+  category String?
+  saintName String?
+  occasion  String?
+
+  prayer   Prayer @relation(fields: [prayerId], references: [id], onDelete: Cascade)
+
+  @@unique([prayerId, lang], name: "prayerId_lang")
+  @@index([lang])
+}
