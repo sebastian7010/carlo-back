@@ -4,6 +4,7 @@ import { prisma } from "./lib/prisma";
 import "dotenv/config";
 
 import { registerAiChatRoute } from "./routes/ai-chat";
+import { registerAiTranslateRoute } from "./routes/ai-translate";
 // -------------------------
 // ADMIN KEY (mínimo para escrituras)
 // -------------------------
@@ -35,7 +36,8 @@ app.use(express.json({ limit: "1mb" }));
 
 // AI Chat
 registerAiChatRoute(app)
-const PORT = Number(process.env.PORT || 3001);
+
+registerAiTranslateRoute(app);const PORT = Number(process.env.PORT || 3001);
 
 // Health
 app.get("/health", (_req: Request, res: Response) => {

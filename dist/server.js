@@ -15183,11 +15183,11 @@ var require_mime_types = __commonJS({
       }
       return exts[0];
     }
-    function lookup(path2) {
-      if (!path2 || typeof path2 !== "string") {
+    function lookup(path3) {
+      if (!path3 || typeof path3 !== "string") {
         return false;
       }
-      var extension2 = extname("x." + path2).toLowerCase().slice(1);
+      var extension2 = extname("x." + path3).toLowerCase().slice(1);
       if (!extension2) {
         return false;
       }
@@ -18555,13 +18555,13 @@ var require_view = __commonJS({
   "node_modules/express/lib/view.js"(exports2, module2) {
     "use strict";
     var debug = require_src()("express:view");
-    var path2 = require("node:path");
-    var fs = require("node:fs");
-    var dirname = path2.dirname;
-    var basename = path2.basename;
-    var extname = path2.extname;
-    var join2 = path2.join;
-    var resolve = path2.resolve;
+    var path3 = require("node:path");
+    var fs2 = require("node:fs");
+    var dirname = path3.dirname;
+    var basename = path3.basename;
+    var extname = path3.extname;
+    var join2 = path3.join;
+    var resolve = path3.resolve;
     module2.exports = View;
     function View(name, options) {
       var opts = options || {};
@@ -18590,17 +18590,17 @@ var require_view = __commonJS({
       this.path = this.lookup(fileName);
     }
     View.prototype.lookup = function lookup(name) {
-      var path3;
+      var path4;
       var roots = [].concat(this.root);
       debug('lookup "%s"', name);
-      for (var i = 0; i < roots.length && !path3; i++) {
+      for (var i = 0; i < roots.length && !path4; i++) {
         var root = roots[i];
         var loc = resolve(root, name);
         var dir = dirname(loc);
         var file = basename(loc);
-        path3 = this.resolve(dir, file);
+        path4 = this.resolve(dir, file);
       }
-      return path3;
+      return path4;
     };
     View.prototype.render = function render(options, callback) {
       var sync = true;
@@ -18622,21 +18622,21 @@ var require_view = __commonJS({
     };
     View.prototype.resolve = function resolve2(dir, file) {
       var ext = this.ext;
-      var path3 = join2(dir, file);
-      var stat = tryStat(path3);
+      var path4 = join2(dir, file);
+      var stat = tryStat(path4);
       if (stat && stat.isFile()) {
-        return path3;
+        return path4;
       }
-      path3 = join2(dir, basename(file, ext), "index" + ext);
-      stat = tryStat(path3);
+      path4 = join2(dir, basename(file, ext), "index" + ext);
+      stat = tryStat(path4);
       if (stat && stat.isFile()) {
-        return path3;
+        return path4;
       }
     };
-    function tryStat(path3) {
-      debug('stat "%s"', path3);
+    function tryStat(path4) {
+      debug('stat "%s"', path4);
       try {
-        return fs.statSync(path3);
+        return fs2.statSync(path4);
       } catch (e) {
         return void 0;
       }
@@ -18649,14 +18649,14 @@ var require_etag = __commonJS({
   "node_modules/etag/index.js"(exports2, module2) {
     "use strict";
     module2.exports = etag;
-    var crypto2 = require("crypto");
+    var crypto3 = require("crypto");
     var Stats = require("fs").Stats;
     var toString = Object.prototype.toString;
     function entitytag(entity) {
       if (entity.length === 0) {
         return '"0-2jmj7l5rSw0yVb/vlWAYkK/YBwk"';
       }
-      var hash = crypto2.createHash("sha1").update(entity, "utf8").digest("base64").substring(0, 27);
+      var hash = crypto3.createHash("sha1").update(entity, "utf8").digest("base64").substring(0, 27);
       var len = typeof entity === "string" ? Buffer.byteLength(entity, "utf8") : entity.length;
       return '"' + len.toString(16) + "-" + hash + '"';
     }
@@ -19834,15 +19834,15 @@ var require_dist = __commonJS({
           if (token.type === endType)
             break;
           if (token.type === "char" || token.type === "escape") {
-            let path2 = token.value;
+            let path3 = token.value;
             let cur = tokens[pos];
             while (cur.type === "char" || cur.type === "escape") {
-              path2 += cur.value;
+              path3 += cur.value;
               cur = tokens[++pos];
             }
             output.push({
               type: "text",
-              value: encodePath(path2)
+              value: encodePath(path3)
             });
             continue;
           }
@@ -19866,16 +19866,16 @@ var require_dist = __commonJS({
       }
       return new TokenData(consumeUntil("end"), str2);
     }
-    function compile(path2, options = {}) {
+    function compile(path3, options = {}) {
       const { encode: encode2 = encodeURIComponent, delimiter = DEFAULT_DELIMITER } = options;
-      const data = typeof path2 === "object" ? path2 : parse(path2, options);
+      const data = typeof path3 === "object" ? path3 : parse(path3, options);
       const fn = tokensToFunction(data.tokens, delimiter, encode2);
-      return function path3(params = {}) {
-        const [path4, ...missing] = fn(params);
+      return function path4(params = {}) {
+        const [path5, ...missing] = fn(params);
         if (missing.length) {
           throw new TypeError(`Missing parameters: ${missing.join(", ")}`);
         }
-        return path4;
+        return path5;
       };
     }
     function tokensToFunction(tokens, delimiter, encode2) {
@@ -19931,9 +19931,9 @@ var require_dist = __commonJS({
         return [encodeValue(value)];
       };
     }
-    function match(path2, options = {}) {
+    function match(path3, options = {}) {
       const { decode = decodeURIComponent, delimiter = DEFAULT_DELIMITER } = options;
-      const { regexp, keys } = pathToRegexp(path2, options);
+      const { regexp, keys } = pathToRegexp(path3, options);
       const decoders = keys.map((key) => {
         if (decode === false)
           return NOOP_VALUE;
@@ -19945,7 +19945,7 @@ var require_dist = __commonJS({
         const m = regexp.exec(input);
         if (!m)
           return false;
-        const path3 = m[0];
+        const path4 = m[0];
         const params = /* @__PURE__ */ Object.create(null);
         for (let i = 1; i < m.length; i++) {
           if (m[i] === void 0)
@@ -19954,15 +19954,15 @@ var require_dist = __commonJS({
           const decoder = decoders[i - 1];
           params[key.name] = decoder(m[i]);
         }
-        return { path: path3, params };
+        return { path: path4, params };
       };
     }
-    function pathToRegexp(path2, options = {}) {
+    function pathToRegexp(path3, options = {}) {
       const { delimiter = DEFAULT_DELIMITER, end = true, sensitive = false, trailing = true } = options;
       const keys = [];
       const flags = sensitive ? "" : "i";
       const sources = [];
-      for (const input of pathsToArray(path2, [])) {
+      for (const input of pathsToArray(path3, [])) {
         const data = typeof input === "object" ? input : parse(input, options);
         for (const tokens of flatten(data.tokens, 0, [])) {
           sources.push(toRegExpSource(tokens, delimiter, keys, data.originalPath));
@@ -20092,18 +20092,18 @@ var require_layer = __commonJS({
     var TRAILING_SLASH_REGEXP = /\/+$/;
     var MATCHING_GROUP_REGEXP = /\((?:\?<(.*?)>)?(?!\?)/g;
     module2.exports = Layer;
-    function Layer(path2, options, fn) {
+    function Layer(path3, options, fn) {
       if (!(this instanceof Layer)) {
-        return new Layer(path2, options, fn);
+        return new Layer(path3, options, fn);
       }
-      debug("new %o", path2);
+      debug("new %o", path3);
       const opts = options || {};
       this.handle = fn;
       this.keys = [];
       this.name = fn.name || "<anonymous>";
       this.params = void 0;
       this.path = void 0;
-      this.slash = path2 === "/" && opts.end === false;
+      this.slash = path3 === "/" && opts.end === false;
       function matcher(_path) {
         if (_path instanceof RegExp) {
           const keys = [];
@@ -20142,7 +20142,7 @@ var require_layer = __commonJS({
           decode: decodeParam
         });
       }
-      this.matchers = Array.isArray(path2) ? path2.map(matcher) : [matcher(path2)];
+      this.matchers = Array.isArray(path3) ? path3.map(matcher) : [matcher(path3)];
     }
     Layer.prototype.handleError = function handleError(error, req, res, next) {
       const fn = this.handle;
@@ -20182,9 +20182,9 @@ var require_layer = __commonJS({
         next(err);
       }
     };
-    Layer.prototype.match = function match(path2) {
+    Layer.prototype.match = function match(path3) {
       let match2;
-      if (path2 != null) {
+      if (path3 != null) {
         if (this.slash) {
           this.params = {};
           this.path = "";
@@ -20192,7 +20192,7 @@ var require_layer = __commonJS({
         }
         let i = 0;
         while (!match2 && i < this.matchers.length) {
-          match2 = this.matchers[i](path2);
+          match2 = this.matchers[i](path3);
           i++;
         }
       }
@@ -20220,13 +20220,13 @@ var require_layer = __commonJS({
         throw err;
       }
     }
-    function loosen(path2) {
-      if (path2 instanceof RegExp || path2 === "/") {
-        return path2;
+    function loosen(path3) {
+      if (path3 instanceof RegExp || path3 === "/") {
+        return path3;
       }
-      return Array.isArray(path2) ? path2.map(function(p) {
+      return Array.isArray(path3) ? path3.map(function(p) {
         return loosen(p);
-      }) : String(path2).replace(TRAILING_SLASH_REGEXP, "");
+      }) : String(path3).replace(TRAILING_SLASH_REGEXP, "");
     }
   }
 });
@@ -20242,9 +20242,9 @@ var require_route = __commonJS({
     var flatten = Array.prototype.flat;
     var methods = METHODS.map((method) => method.toLowerCase());
     module2.exports = Route;
-    function Route(path2) {
-      debug("new %o", path2);
-      this.path = path2;
+    function Route(path3) {
+      debug("new %o", path3);
+      this.path = path3;
       this.stack = [];
       this.methods = /* @__PURE__ */ Object.create(null);
     }
@@ -20452,8 +20452,8 @@ var require_router = __commonJS({
         if (++sync > 100) {
           return setImmediate(next, err);
         }
-        const path2 = getPathname(req);
-        if (path2 == null) {
+        const path3 = getPathname(req);
+        if (path3 == null) {
           return done(layerError);
         }
         let layer;
@@ -20461,7 +20461,7 @@ var require_router = __commonJS({
         let route;
         while (match !== true && idx < stack.length) {
           layer = stack[idx++];
-          match = matchLayer(layer, path2);
+          match = matchLayer(layer, path3);
           route = layer.route;
           if (typeof match !== "boolean") {
             layerError = layerError || match;
@@ -20499,18 +20499,18 @@ var require_router = __commonJS({
           } else if (route) {
             layer.handleRequest(req, res, next);
           } else {
-            trimPrefix(layer, layerError, layerPath, path2);
+            trimPrefix(layer, layerError, layerPath, path3);
           }
           sync = 0;
         });
       }
-      function trimPrefix(layer, layerError, layerPath, path2) {
+      function trimPrefix(layer, layerError, layerPath, path3) {
         if (layerPath.length !== 0) {
-          if (layerPath !== path2.substring(0, layerPath.length)) {
+          if (layerPath !== path3.substring(0, layerPath.length)) {
             next(layerError);
             return;
           }
-          const c = path2[layerPath.length];
+          const c = path3[layerPath.length];
           if (c && c !== "/") {
             next(layerError);
             return;
@@ -20534,7 +20534,7 @@ var require_router = __commonJS({
     };
     Router.prototype.use = function use(handler) {
       let offset = 0;
-      let path2 = "/";
+      let path3 = "/";
       if (typeof handler !== "function") {
         let arg = handler;
         while (Array.isArray(arg) && arg.length !== 0) {
@@ -20542,7 +20542,7 @@ var require_router = __commonJS({
         }
         if (typeof arg !== "function") {
           offset = 1;
-          path2 = handler;
+          path3 = handler;
         }
       }
       const callbacks = flatten.call(slice.call(arguments, offset), Infinity);
@@ -20554,8 +20554,8 @@ var require_router = __commonJS({
         if (typeof fn !== "function") {
           throw new TypeError("argument handler must be a function");
         }
-        debug("use %o %s", path2, fn.name || "<anonymous>");
-        const layer = new Layer(path2, {
+        debug("use %o %s", path3, fn.name || "<anonymous>");
+        const layer = new Layer(path3, {
           sensitive: this.caseSensitive,
           strict: false,
           end: false
@@ -20565,9 +20565,9 @@ var require_router = __commonJS({
       }
       return this;
     };
-    Router.prototype.route = function route(path2) {
-      const route2 = new Route(path2);
-      const layer = new Layer(path2, {
+    Router.prototype.route = function route(path3) {
+      const route2 = new Route(path3);
+      const layer = new Layer(path3, {
         sensitive: this.caseSensitive,
         strict: this.strict,
         end: true
@@ -20580,8 +20580,8 @@ var require_router = __commonJS({
       return route2;
     };
     methods.concat("all").forEach(function(method) {
-      Router.prototype[method] = function(path2) {
-        const route = this.route(path2);
+      Router.prototype[method] = function(path3) {
+        const route = this.route(path3);
         route[method].apply(route, slice.call(arguments, 1));
         return this;
       };
@@ -20610,9 +20610,9 @@ var require_router = __commonJS({
       const fqdnIndex = url.substring(0, pathLength).indexOf("://");
       return fqdnIndex !== -1 ? url.substring(0, url.indexOf("/", 3 + fqdnIndex)) : void 0;
     }
-    function matchLayer(layer, path2) {
+    function matchLayer(layer, path3) {
       try {
-        return layer.match(path2);
+        return layer.match(path3);
       } catch (err) {
         return err;
       }
@@ -20840,7 +20840,7 @@ var require_application = __commonJS({
     };
     app2.use = function use(fn) {
       var offset = 0;
-      var path2 = "/";
+      var path3 = "/";
       if (typeof fn !== "function") {
         var arg = fn;
         while (Array.isArray(arg) && arg.length !== 0) {
@@ -20848,7 +20848,7 @@ var require_application = __commonJS({
         }
         if (typeof arg !== "function") {
           offset = 1;
-          path2 = fn;
+          path3 = fn;
         }
       }
       var fns = flatten.call(slice.call(arguments, offset), Infinity);
@@ -20858,12 +20858,12 @@ var require_application = __commonJS({
       var router = this.router;
       fns.forEach(function(fn2) {
         if (!fn2 || !fn2.handle || !fn2.set) {
-          return router.use(path2, fn2);
+          return router.use(path3, fn2);
         }
-        debug(".use app under %s", path2);
-        fn2.mountpath = path2;
+        debug(".use app under %s", path3);
+        fn2.mountpath = path3;
         fn2.parent = this;
-        router.use(path2, function mounted_app(req, res, next) {
+        router.use(path3, function mounted_app(req, res, next) {
           var orig = req.app;
           fn2.handle(req, res, function(err) {
             Object.setPrototypeOf(req, orig.request);
@@ -20875,8 +20875,8 @@ var require_application = __commonJS({
       }, this);
       return this;
     };
-    app2.route = function route(path2) {
-      return this.router.route(path2);
+    app2.route = function route(path3) {
+      return this.router.route(path3);
     };
     app2.engine = function engine(ext, fn) {
       if (typeof fn !== "function") {
@@ -20919,7 +20919,7 @@ var require_application = __commonJS({
       }
       return this;
     };
-    app2.path = function path2() {
+    app2.path = function path3() {
       return this.parent ? this.parent.path() + this.mountpath : "";
     };
     app2.enabled = function enabled(setting) {
@@ -20935,17 +20935,17 @@ var require_application = __commonJS({
       return this.set(setting, false);
     };
     methods.forEach(function(method) {
-      app2[method] = function(path2) {
+      app2[method] = function(path3) {
         if (method === "get" && arguments.length === 1) {
-          return this.set(path2);
+          return this.set(path3);
         }
-        var route = this.route(path2);
+        var route = this.route(path3);
         route[method].apply(route, slice.call(arguments, 1));
         return this;
       };
     });
-    app2.all = function all(path2) {
-      var route = this.route(path2);
+    app2.all = function all(path3) {
+      var route = this.route(path3);
       var args = slice.call(arguments, 1);
       for (var i = 0; i < methods.length; i++) {
         route[methods[i]].apply(route, args);
@@ -21855,7 +21855,7 @@ var require_request = __commonJS({
       var subdomains2 = !isIP(hostname) ? hostname.split(".").reverse() : [hostname];
       return subdomains2.slice(offset);
     });
-    defineGetter(req, "path", function path2() {
+    defineGetter(req, "path", function path3() {
       return parse(this).pathname;
     });
     defineGetter(req, "host", function host() {
@@ -22071,17 +22071,17 @@ var require_content_disposition = __commonJS({
 // node_modules/express/node_modules/cookie-signature/index.js
 var require_cookie_signature = __commonJS({
   "node_modules/express/node_modules/cookie-signature/index.js"(exports2) {
-    var crypto2 = require("crypto");
+    var crypto3 = require("crypto");
     exports2.sign = function(val, secret) {
       if ("string" != typeof val) throw new TypeError("Cookie value must be provided as a string.");
       if (null == secret) throw new TypeError("Secret key must be provided.");
-      return val + "." + crypto2.createHmac("sha256", secret).update(val).digest("base64").replace(/\=+$/, "");
+      return val + "." + crypto3.createHmac("sha256", secret).update(val).digest("base64").replace(/\=+$/, "");
     };
     exports2.unsign = function(input, secret) {
       if ("string" != typeof input) throw new TypeError("Signed cookie string must be provided.");
       if (null == secret) throw new TypeError("Secret key must be provided.");
       var tentativeValue = input.slice(0, input.lastIndexOf(".")), expectedInput = exports2.sign(tentativeValue, secret), expectedBuffer = Buffer.from(expectedInput), inputBuffer = Buffer.from(input);
-      return expectedBuffer.length === inputBuffer.length && crypto2.timingSafeEqual(expectedBuffer, inputBuffer) ? tentativeValue : false;
+      return expectedBuffer.length === inputBuffer.length && crypto3.timingSafeEqual(expectedBuffer, inputBuffer) ? tentativeValue : false;
     };
   }
 });
@@ -22262,32 +22262,32 @@ var require_send = __commonJS({
     var escapeHtml = require_escape_html();
     var etag = require_etag();
     var fresh = require_fresh();
-    var fs = require("fs");
+    var fs2 = require("fs");
     var mime = require_mime_types();
     var ms = require_ms();
     var onFinished = require_on_finished();
     var parseRange = require_range_parser();
-    var path2 = require("path");
+    var path3 = require("path");
     var statuses = require_statuses();
     var Stream2 = require("stream");
     var util = require("util");
-    var extname = path2.extname;
-    var join2 = path2.join;
-    var normalize = path2.normalize;
-    var resolve = path2.resolve;
-    var sep = path2.sep;
+    var extname = path3.extname;
+    var join2 = path3.join;
+    var normalize = path3.normalize;
+    var resolve = path3.resolve;
+    var sep = path3.sep;
     var BYTES_RANGE_REGEXP = /^ *bytes=/;
     var MAX_MAXAGE = 60 * 60 * 24 * 365 * 1e3;
     var UP_PATH_REGEXP = /(?:^|[\\/])\.\.(?:[\\/]|$)/;
     module2.exports = send;
-    function send(req, path3, options) {
-      return new SendStream(req, path3, options);
+    function send(req, path4, options) {
+      return new SendStream(req, path4, options);
     }
-    function SendStream(req, path3, options) {
+    function SendStream(req, path4, options) {
       Stream2.call(this);
       var opts = options || {};
       this.options = opts;
-      this.path = path3;
+      this.path = path4;
       this.req = req;
       this._acceptRanges = opts.acceptRanges !== void 0 ? Boolean(opts.acceptRanges) : true;
       this._cacheControl = opts.cacheControl !== void 0 ? Boolean(opts.cacheControl) : true;
@@ -22401,10 +22401,10 @@ var require_send = __commonJS({
       var lastModified = this.res.getHeader("Last-Modified");
       return parseHttpDate(lastModified) <= parseHttpDate(ifRange);
     };
-    SendStream.prototype.redirect = function redirect(path3) {
+    SendStream.prototype.redirect = function redirect(path4) {
       var res = this.res;
       if (hasListeners(this, "directory")) {
-        this.emit("directory", res, path3);
+        this.emit("directory", res, path4);
         return;
       }
       if (this.hasTrailingSlash()) {
@@ -22424,38 +22424,38 @@ var require_send = __commonJS({
     SendStream.prototype.pipe = function pipe(res) {
       var root = this._root;
       this.res = res;
-      var path3 = decode(this.path);
-      if (path3 === -1) {
+      var path4 = decode(this.path);
+      if (path4 === -1) {
         this.error(400);
         return res;
       }
-      if (~path3.indexOf("\0")) {
+      if (~path4.indexOf("\0")) {
         this.error(400);
         return res;
       }
       var parts;
       if (root !== null) {
-        if (path3) {
-          path3 = normalize("." + sep + path3);
+        if (path4) {
+          path4 = normalize("." + sep + path4);
         }
-        if (UP_PATH_REGEXP.test(path3)) {
-          debug('malicious path "%s"', path3);
+        if (UP_PATH_REGEXP.test(path4)) {
+          debug('malicious path "%s"', path4);
           this.error(403);
           return res;
         }
-        parts = path3.split(sep);
-        path3 = normalize(join2(root, path3));
+        parts = path4.split(sep);
+        path4 = normalize(join2(root, path4));
       } else {
-        if (UP_PATH_REGEXP.test(path3)) {
-          debug('malicious path "%s"', path3);
+        if (UP_PATH_REGEXP.test(path4)) {
+          debug('malicious path "%s"', path4);
           this.error(403);
           return res;
         }
-        parts = normalize(path3).split(sep);
-        path3 = resolve(path3);
+        parts = normalize(path4).split(sep);
+        path4 = resolve(path4);
       }
       if (containsDotFile(parts)) {
-        debug('%s dotfile "%s"', this._dotfiles, path3);
+        debug('%s dotfile "%s"', this._dotfiles, path4);
         switch (this._dotfiles) {
           case "allow":
             break;
@@ -22469,13 +22469,13 @@ var require_send = __commonJS({
         }
       }
       if (this._index.length && this.hasTrailingSlash()) {
-        this.sendIndex(path3);
+        this.sendIndex(path4);
         return res;
       }
-      this.sendFile(path3);
+      this.sendFile(path4);
       return res;
     };
-    SendStream.prototype.send = function send2(path3, stat) {
+    SendStream.prototype.send = function send2(path4, stat) {
       var len = stat.size;
       var options = this.options;
       var opts = {};
@@ -22487,9 +22487,9 @@ var require_send = __commonJS({
         this.headersAlreadySent();
         return;
       }
-      debug('pipe "%s"', path3);
-      this.setHeader(path3, stat);
-      this.type(path3);
+      debug('pipe "%s"', path4);
+      this.setHeader(path4, stat);
+      this.type(path4);
       if (this.isConditionalGET()) {
         if (this.isPreconditionFailure()) {
           this.error(412);
@@ -22538,30 +22538,30 @@ var require_send = __commonJS({
         res.end();
         return;
       }
-      this.stream(path3, opts);
+      this.stream(path4, opts);
     };
-    SendStream.prototype.sendFile = function sendFile(path3) {
+    SendStream.prototype.sendFile = function sendFile(path4) {
       var i = 0;
       var self = this;
-      debug('stat "%s"', path3);
-      fs.stat(path3, function onstat(err, stat) {
-        var pathEndsWithSep = path3[path3.length - 1] === sep;
-        if (err && err.code === "ENOENT" && !extname(path3) && !pathEndsWithSep) {
+      debug('stat "%s"', path4);
+      fs2.stat(path4, function onstat(err, stat) {
+        var pathEndsWithSep = path4[path4.length - 1] === sep;
+        if (err && err.code === "ENOENT" && !extname(path4) && !pathEndsWithSep) {
           return next(err);
         }
         if (err) return self.onStatError(err);
-        if (stat.isDirectory()) return self.redirect(path3);
+        if (stat.isDirectory()) return self.redirect(path4);
         if (pathEndsWithSep) return self.error(404);
-        self.emit("file", path3, stat);
-        self.send(path3, stat);
+        self.emit("file", path4, stat);
+        self.send(path4, stat);
       });
       function next(err) {
         if (self._extensions.length <= i) {
           return err ? self.onStatError(err) : self.error(404);
         }
-        var p = path3 + "." + self._extensions[i++];
+        var p = path4 + "." + self._extensions[i++];
         debug('stat "%s"', p);
-        fs.stat(p, function(err2, stat) {
+        fs2.stat(p, function(err2, stat) {
           if (err2) return next(err2);
           if (stat.isDirectory()) return next();
           self.emit("file", p, stat);
@@ -22569,7 +22569,7 @@ var require_send = __commonJS({
         });
       }
     };
-    SendStream.prototype.sendIndex = function sendIndex(path3) {
+    SendStream.prototype.sendIndex = function sendIndex(path4) {
       var i = -1;
       var self = this;
       function next(err) {
@@ -22577,9 +22577,9 @@ var require_send = __commonJS({
           if (err) return self.onStatError(err);
           return self.error(404);
         }
-        var p = join2(path3, self._index[i]);
+        var p = join2(path4, self._index[i]);
         debug('stat "%s"', p);
-        fs.stat(p, function(err2, stat) {
+        fs2.stat(p, function(err2, stat) {
           if (err2) return next(err2);
           if (stat.isDirectory()) return next();
           self.emit("file", p, stat);
@@ -22588,10 +22588,10 @@ var require_send = __commonJS({
       }
       next();
     };
-    SendStream.prototype.stream = function stream(path3, options) {
+    SendStream.prototype.stream = function stream(path4, options) {
       var self = this;
       var res = this.res;
-      var stream2 = fs.createReadStream(path3, options);
+      var stream2 = fs2.createReadStream(path4, options);
       this.emit("stream", stream2);
       stream2.pipe(res);
       function cleanup() {
@@ -22606,17 +22606,17 @@ var require_send = __commonJS({
         self.emit("end");
       });
     };
-    SendStream.prototype.type = function type(path3) {
+    SendStream.prototype.type = function type(path4) {
       var res = this.res;
       if (res.getHeader("Content-Type")) return;
-      var ext = extname(path3);
+      var ext = extname(path4);
       var type2 = mime.contentType(ext) || "application/octet-stream";
       debug("content-type %s", type2);
       res.setHeader("Content-Type", type2);
     };
-    SendStream.prototype.setHeader = function setHeader(path3, stat) {
+    SendStream.prototype.setHeader = function setHeader(path4, stat) {
       var res = this.res;
-      this.emit("headers", res, path3, stat);
+      this.emit("headers", res, path4, stat);
       if (this._acceptRanges && !res.getHeader("Accept-Ranges")) {
         debug("accept ranges");
         res.setHeader("Accept-Ranges", "bytes");
@@ -22674,9 +22674,9 @@ var require_send = __commonJS({
       }
       return err instanceof Error ? createError(status, err, { expose: false }) : createError(status, err);
     }
-    function decode(path3) {
+    function decode(path4) {
       try {
-        return decodeURIComponent(path3);
+        return decodeURIComponent(path4);
       } catch (err) {
         return -1;
       }
@@ -22820,7 +22820,7 @@ var require_response = __commonJS({
     var http = require("node:http");
     var onFinished = require_on_finished();
     var mime = require_mime_types();
-    var path2 = require("node:path");
+    var path3 = require("node:path");
     var pathIsAbsolute = require("node:path").isAbsolute;
     var statuses = require_statuses();
     var sign = require_cookie_signature().sign;
@@ -22829,8 +22829,8 @@ var require_response = __commonJS({
     var setCharset = require_utils3().setCharset;
     var cookie = require_cookie();
     var send = require_send();
-    var extname = path2.extname;
-    var resolve = path2.resolve;
+    var extname = path3.extname;
+    var resolve = path3.resolve;
     var vary = require_vary();
     var { Buffer: Buffer2 } = require("node:buffer");
     var res = Object.create(http.ServerResponse.prototype);
@@ -22976,26 +22976,26 @@ var require_response = __commonJS({
       this.type("txt");
       return this.send(body);
     };
-    res.sendFile = function sendFile(path3, options, callback) {
+    res.sendFile = function sendFile(path4, options, callback) {
       var done = callback;
       var req = this.req;
       var res2 = this;
       var next = req.next;
       var opts = options || {};
-      if (!path3) {
+      if (!path4) {
         throw new TypeError("path argument is required to res.sendFile");
       }
-      if (typeof path3 !== "string") {
+      if (typeof path4 !== "string") {
         throw new TypeError("path must be a string to res.sendFile");
       }
       if (typeof options === "function") {
         done = options;
         opts = {};
       }
-      if (!opts.root && !pathIsAbsolute(path3)) {
+      if (!opts.root && !pathIsAbsolute(path4)) {
         throw new TypeError("path must be absolute or specify root to res.sendFile");
       }
-      var pathname = encodeURI(path3);
+      var pathname = encodeURI(path4);
       opts.etag = this.app.enabled("etag");
       var file = send(req, pathname, opts);
       sendfile(res2, file, opts, function(err) {
@@ -23006,7 +23006,7 @@ var require_response = __commonJS({
         }
       });
     };
-    res.download = function download(path3, filename, options, callback) {
+    res.download = function download(path4, filename, options, callback) {
       var done = callback;
       var name = filename;
       var opts = options || null;
@@ -23023,7 +23023,7 @@ var require_response = __commonJS({
         opts = filename;
       }
       var headers = {
-        "Content-Disposition": contentDisposition(name || path3)
+        "Content-Disposition": contentDisposition(name || path4)
       };
       if (opts && opts.headers) {
         var keys = Object.keys(opts.headers);
@@ -23036,7 +23036,7 @@ var require_response = __commonJS({
       }
       opts = Object.create(opts);
       opts.headers = headers;
-      var fullPath = !opts.root ? resolve(path3) : path3;
+      var fullPath = !opts.root ? resolve(path4) : path4;
       return this.sendFile(fullPath, opts, done);
     };
     res.contentType = res.type = function contentType(type) {
@@ -23319,11 +23319,11 @@ var require_serve_static = __commonJS({
         }
         var forwardError = !fallthrough;
         var originalUrl = parseUrl.original(req);
-        var path2 = parseUrl(req).pathname;
-        if (path2 === "/" && originalUrl.pathname.substr(-1) !== "/") {
-          path2 = "";
+        var path3 = parseUrl(req).pathname;
+        if (path3 === "/" && originalUrl.pathname.substr(-1) !== "/") {
+          path3 = "";
         }
-        var stream = send(req, path2, opts);
+        var stream = send(req, path3, opts);
         stream.on("directory", onDirectory);
         if (setHeaders) {
           stream.on("headers", setHeaders);
@@ -23779,10 +23779,10 @@ var require_package = __commonJS({
 // node_modules/dotenv/lib/main.js
 var require_main = __commonJS({
   "node_modules/dotenv/lib/main.js"(exports2, module2) {
-    var fs = require("fs");
-    var path2 = require("path");
+    var fs2 = require("fs");
+    var path3 = require("path");
     var os = require("os");
-    var crypto2 = require("crypto");
+    var crypto3 = require("crypto");
     var packageJson = require_package();
     var version = packageJson.version;
     var TIPS = [
@@ -23921,7 +23921,7 @@ var require_main = __commonJS({
       if (options && options.path && options.path.length > 0) {
         if (Array.isArray(options.path)) {
           for (const filepath of options.path) {
-            if (fs.existsSync(filepath)) {
+            if (fs2.existsSync(filepath)) {
               possibleVaultPath = filepath.endsWith(".vault") ? filepath : `${filepath}.vault`;
             }
           }
@@ -23929,15 +23929,15 @@ var require_main = __commonJS({
           possibleVaultPath = options.path.endsWith(".vault") ? options.path : `${options.path}.vault`;
         }
       } else {
-        possibleVaultPath = path2.resolve(process.cwd(), ".env.vault");
+        possibleVaultPath = path3.resolve(process.cwd(), ".env.vault");
       }
-      if (fs.existsSync(possibleVaultPath)) {
+      if (fs2.existsSync(possibleVaultPath)) {
         return possibleVaultPath;
       }
       return null;
     }
     function _resolveHome(envPath) {
-      return envPath[0] === "~" ? path2.join(os.homedir(), envPath.slice(1)) : envPath;
+      return envPath[0] === "~" ? path3.join(os.homedir(), envPath.slice(1)) : envPath;
     }
     function _configVault(options) {
       const debug = parseBoolean(process.env.DOTENV_CONFIG_DEBUG || options && options.debug);
@@ -23954,7 +23954,7 @@ var require_main = __commonJS({
       return { parsed };
     }
     function configDotenv(options) {
-      const dotenvPath = path2.resolve(process.cwd(), ".env");
+      const dotenvPath = path3.resolve(process.cwd(), ".env");
       let encoding = "utf8";
       let processEnv = process.env;
       if (options && options.processEnv != null) {
@@ -23982,13 +23982,13 @@ var require_main = __commonJS({
       }
       let lastError;
       const parsedAll = {};
-      for (const path3 of optionPaths) {
+      for (const path4 of optionPaths) {
         try {
-          const parsed = DotenvModule.parse(fs.readFileSync(path3, { encoding }));
+          const parsed = DotenvModule.parse(fs2.readFileSync(path4, { encoding }));
           DotenvModule.populate(parsedAll, parsed, options);
         } catch (e) {
           if (debug) {
-            _debug(`Failed to load ${path3} ${e.message}`);
+            _debug(`Failed to load ${path4} ${e.message}`);
           }
           lastError = e;
         }
@@ -24001,7 +24001,7 @@ var require_main = __commonJS({
         const shortPaths = [];
         for (const filePath of optionPaths) {
           try {
-            const relative = path2.relative(process.cwd(), filePath);
+            const relative = path3.relative(process.cwd(), filePath);
             shortPaths.push(relative);
           } catch (e) {
             if (debug) {
@@ -24036,7 +24036,7 @@ var require_main = __commonJS({
       const authTag = ciphertext.subarray(-16);
       ciphertext = ciphertext.subarray(12, -16);
       try {
-        const aesgcm = crypto2.createDecipheriv("aes-256-gcm", key, nonce);
+        const aesgcm = crypto3.createDecipheriv("aes-256-gcm", key, nonce);
         aesgcm.setAuthTag(authTag);
         return `${aesgcm.update(ciphertext)}${aesgcm.final()}`;
       } catch (error) {
@@ -25127,16 +25127,16 @@ ${c}`);
     M.default.join(__dirname, "../libquery_engine-rhel-openssl-3.0.x.so.node");
     M.default.join(__dirname, "../query_engine-windows.dll.node");
     var Si = O(require("node:fs"));
-    var fs = gr("chmodPlusX");
+    var fs2 = gr("chmodPlusX");
     function Ri(e) {
       if (process.platform === "win32") return;
       let r = Si.default.statSync(e), t = r.mode | 64 | 8 | 1;
       if (r.mode === t) {
-        fs(`Execution permissions of ${e} are fine`);
+        fs2(`Execution permissions of ${e} are fine`);
         return;
       }
       let n = t.toString(8).slice(-3);
-      fs(`Have to call chmodPlusX on ${e}`), Si.default.chmodSync(e, n);
+      fs2(`Have to call chmodPlusX on ${e}`), Si.default.chmodSync(e, n);
     }
     function Ai(e) {
       let r = e.e, t = (a) => `Prisma cannot find the required \`${a}\` system library in your system`, n = r.message.includes("cannot open shared object file"), i = `Please refer to the documentation about Prisma's system requirements: ${wi("https://pris.ly/d/system-requirements")}`, o = `Unable to require(\`${Ce(e.id)}\`).`, s = hr({ message: r.message, code: r.code }).with({ code: "ENOENT" }, () => "File does not exist.").when(({ message: a }) => n && a.includes("libz"), () => `${t("libz")}. Please install it and try again.`).when(({ message: a }) => n && a.includes("libgcc_s"), () => `${t("libgcc_s")}. Please install it and try again.`).when(({ message: a }) => n && a.includes("libssl"), () => {
@@ -29871,7 +29871,7 @@ var require_client = __commonJS({
       JsonNull: objectEnumValues2.classes.JsonNull,
       AnyNull: objectEnumValues2.classes.AnyNull
     };
-    var path2 = require("path");
+    var path3 = require("path");
     exports2.Prisma.TransactionIsolationLevel = makeStrictEnum2({
       ReadUncommitted: "ReadUncommitted",
       ReadCommitted: "ReadCommitted",
@@ -30014,17 +30014,17 @@ var require_client = __commonJS({
       "inlineSchemaHash": "932d29042ad9ad634e78330e394f70249a043dfd6521c4d26fdde43c7a62cf29",
       "copyEngine": true
     };
-    var fs = require("fs");
+    var fs2 = require("fs");
     config.dirname = __dirname;
-    if (!fs.existsSync(path2.join(__dirname, "schema.prisma"))) {
+    if (!fs2.existsSync(path3.join(__dirname, "schema.prisma"))) {
       const alternativePaths = [
         "node_modules/.prisma/client",
         ".prisma/client"
       ];
       const alternativePath = alternativePaths.find((altPath) => {
-        return fs.existsSync(path2.join(process.cwd(), altPath, "schema.prisma"));
+        return fs2.existsSync(path3.join(process.cwd(), altPath, "schema.prisma"));
       }) ?? alternativePaths[0];
-      config.dirname = path2.join(process.cwd(), alternativePath);
+      config.dirname = path3.join(process.cwd(), alternativePath);
       config.isBundled = true;
     }
     config.runtimeDataModel = JSON.parse('{"models":{"Saint":{"dbName":null,"schema":null,"fields":[{"name":"id","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":true,"isReadOnly":false,"hasDefaultValue":true,"type":"String","nativeType":null,"default":{"name":"cuid","args":[1]},"isGenerated":false,"isUpdatedAt":false},{"name":"slug","kind":"scalar","isList":false,"isRequired":true,"isUnique":true,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"name","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"country","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"title","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"feastDay","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"imageUrl","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"biography","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":["Text",[]],"isGenerated":false,"isUpdatedAt":false},{"name":"createdAt","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":true,"type":"DateTime","nativeType":null,"default":{"name":"now","args":[]},"isGenerated":false,"isUpdatedAt":false},{"name":"updatedAt","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"DateTime","nativeType":null,"isGenerated":false,"isUpdatedAt":true},{"name":"miracles","kind":"object","isList":true,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"Miracle","nativeType":null,"relationName":"MiracleToSaint","relationFromFields":[],"relationToFields":[],"isGenerated":false,"isUpdatedAt":false},{"name":"translations","kind":"object","isList":true,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"SaintTranslation","nativeType":null,"relationName":"SaintToSaintTranslation","relationFromFields":[],"relationToFields":[],"isGenerated":false,"isUpdatedAt":false},{"name":"continent","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"lat","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"Float","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"lng","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"Float","nativeType":null,"isGenerated":false,"isUpdatedAt":false}],"primaryKey":null,"uniqueFields":[],"uniqueIndexes":[],"isGenerated":false},"Miracle":{"dbName":null,"schema":null,"fields":[{"name":"id","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":true,"isReadOnly":false,"hasDefaultValue":true,"type":"String","nativeType":null,"default":{"name":"cuid","args":[1]},"isGenerated":false,"isUpdatedAt":false},{"name":"saintId","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":true,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"title","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"type","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"date","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"location","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"witnesses","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"approved","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":true,"type":"Boolean","nativeType":null,"default":false,"isGenerated":false,"isUpdatedAt":false},{"name":"details","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"createdAt","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":true,"type":"DateTime","nativeType":null,"default":{"name":"now","args":[]},"isGenerated":false,"isUpdatedAt":false},{"name":"updatedAt","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"DateTime","nativeType":null,"isGenerated":false,"isUpdatedAt":true},{"name":"saint","kind":"object","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"Saint","nativeType":null,"relationName":"MiracleToSaint","relationFromFields":["saintId"],"relationToFields":["id"],"relationOnDelete":"Cascade","isGenerated":false,"isUpdatedAt":false},{"name":"translations","kind":"object","isList":true,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"MiracleTranslation","nativeType":null,"relationName":"MiracleToMiracleTranslation","relationFromFields":[],"relationToFields":[],"isGenerated":false,"isUpdatedAt":false}],"primaryKey":null,"uniqueFields":[],"uniqueIndexes":[],"isGenerated":false},"Prayer":{"dbName":null,"schema":null,"fields":[{"name":"translations","kind":"object","isList":true,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"PrayerTranslation","nativeType":null,"relationName":"PrayerToPrayerTranslation","relationFromFields":[],"relationToFields":[],"isGenerated":false,"isUpdatedAt":false},{"name":"id","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":true,"isReadOnly":false,"hasDefaultValue":true,"type":"String","nativeType":null,"default":{"name":"cuid","args":[1]},"isGenerated":false,"isUpdatedAt":false},{"name":"title","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"content","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"category","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"approved","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":true,"type":"Boolean","nativeType":null,"default":false,"isGenerated":false,"isUpdatedAt":false},{"name":"createdAt","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":true,"type":"DateTime","nativeType":null,"default":{"name":"now","args":[]},"isGenerated":false,"isUpdatedAt":false},{"name":"updatedAt","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"DateTime","nativeType":null,"isGenerated":false,"isUpdatedAt":true},{"name":"saintName","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"occasion","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false}],"primaryKey":null,"uniqueFields":[],"uniqueIndexes":[],"isGenerated":false},"SaintTranslation":{"dbName":null,"schema":null,"fields":[{"name":"id","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":true,"isReadOnly":false,"hasDefaultValue":true,"type":"String","nativeType":null,"default":{"name":"cuid","args":[1]},"isGenerated":false,"isUpdatedAt":false},{"name":"saintId","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":true,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"lang","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"name","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"title","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"biography","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":["Text",[]],"isGenerated":false,"isUpdatedAt":false},{"name":"saint","kind":"object","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"Saint","nativeType":null,"relationName":"SaintToSaintTranslation","relationFromFields":["saintId"],"relationToFields":["id"],"relationOnDelete":"Cascade","isGenerated":false,"isUpdatedAt":false}],"primaryKey":null,"uniqueFields":[["saintId","lang"]],"uniqueIndexes":[{"name":"saintId_lang","fields":["saintId","lang"]}],"isGenerated":false},"MiracleTranslation":{"dbName":null,"schema":null,"fields":[{"name":"id","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":true,"isReadOnly":false,"hasDefaultValue":true,"type":"String","nativeType":null,"default":{"name":"cuid","args":[1]},"isGenerated":false,"isUpdatedAt":false},{"name":"miracleId","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":true,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"lang","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"title","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"type","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"date","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"location","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"witnesses","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"details","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"miracle","kind":"object","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"Miracle","nativeType":null,"relationName":"MiracleToMiracleTranslation","relationFromFields":["miracleId"],"relationToFields":["id"],"relationOnDelete":"Cascade","isGenerated":false,"isUpdatedAt":false}],"primaryKey":null,"uniqueFields":[["miracleId","lang"]],"uniqueIndexes":[{"name":"miracleId_lang","fields":["miracleId","lang"]}],"isGenerated":false},"PrayerTranslation":{"dbName":null,"schema":null,"fields":[{"name":"id","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":true,"isReadOnly":false,"hasDefaultValue":true,"type":"String","nativeType":null,"default":{"name":"cuid","args":[1]},"isGenerated":false,"isUpdatedAt":false},{"name":"prayerId","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":true,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"lang","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"title","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"content","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"category","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"saintName","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"occasion","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"prayer","kind":"object","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"Prayer","nativeType":null,"relationName":"PrayerToPrayerTranslation","relationFromFields":["prayerId"],"relationToFields":["id"],"relationOnDelete":"Cascade","isGenerated":false,"isUpdatedAt":false}],"primaryKey":null,"uniqueFields":[["prayerId","lang"]],"uniqueIndexes":[{"name":"prayerId_lang","fields":["prayerId","lang"]}],"isGenerated":false}},"enums":{},"types":{}}');
@@ -30033,16 +30033,16 @@ var require_client = __commonJS({
     config.compilerWasm = void 0;
     var { warnEnvConflicts: warnEnvConflicts2 } = require_library();
     warnEnvConflicts2({
-      rootEnvPath: config.relativeEnvPaths.rootEnvPath && path2.resolve(config.dirname, config.relativeEnvPaths.rootEnvPath),
-      schemaEnvPath: config.relativeEnvPaths.schemaEnvPath && path2.resolve(config.dirname, config.relativeEnvPaths.schemaEnvPath)
+      rootEnvPath: config.relativeEnvPaths.rootEnvPath && path3.resolve(config.dirname, config.relativeEnvPaths.rootEnvPath),
+      schemaEnvPath: config.relativeEnvPaths.schemaEnvPath && path3.resolve(config.dirname, config.relativeEnvPaths.schemaEnvPath)
     });
     var PrismaClient2 = getPrismaClient2(config);
     exports2.PrismaClient = PrismaClient2;
     Object.assign(exports2, Prisma);
-    path2.join(__dirname, "query_engine-windows.dll.node");
-    path2.join(process.cwd(), "node_modules/.prisma/client/query_engine-windows.dll.node");
-    path2.join(__dirname, "schema.prisma");
-    path2.join(process.cwd(), "node_modules/.prisma/client/schema.prisma");
+    path3.join(__dirname, "query_engine-windows.dll.node");
+    path3.join(process.cwd(), "node_modules/.prisma/client/query_engine-windows.dll.node");
+    path3.join(__dirname, "schema.prisma");
+    path3.join(process.cwd(), "node_modules/.prisma/client/schema.prisma");
   }
 });
 
@@ -30101,13 +30101,13 @@ function __classPrivateFieldGet(receiver, state, kind, f) {
 
 // node_modules/openai/internal/utils/uuid.mjs
 var uuid4 = function() {
-  const { crypto: crypto2 } = globalThis;
-  if (crypto2?.randomUUID) {
-    uuid4 = crypto2.randomUUID.bind(crypto2);
-    return crypto2.randomUUID();
+  const { crypto: crypto3 } = globalThis;
+  if (crypto3?.randomUUID) {
+    uuid4 = crypto3.randomUUID.bind(crypto3);
+    return crypto3.randomUUID();
   }
   const u8 = new Uint8Array(1);
-  const randomByte = crypto2 ? () => crypto2.getRandomValues(u8)[0] : () => Math.random() * 255 & 255;
+  const randomByte = crypto3 ? () => crypto3.getRandomValues(u8)[0] : () => Math.random() * 255 & 255;
   return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, (c) => (+c ^ randomByte() & 15 >> +c / 4).toString(16));
 };
 
@@ -31710,12 +31710,12 @@ function encodeURIPath(str2) {
   return str2.replace(/[^A-Za-z0-9\-._~!$&'()*+,;=:@]+/g, encodeURIComponent);
 }
 var EMPTY = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.create(null));
-var createPathTagFunction = (pathEncoder = encodeURIPath) => function path2(statics, ...params) {
+var createPathTagFunction = (pathEncoder = encodeURIPath) => function path3(statics, ...params) {
   if (statics.length === 1)
     return statics[0];
   let postPath = false;
   const invalidSegments = [];
-  const path3 = statics.reduce((previousValue, currentValue, index) => {
+  const path4 = statics.reduce((previousValue, currentValue, index) => {
     if (/[?#]/.test(currentValue)) {
       postPath = true;
     }
@@ -31732,7 +31732,7 @@ var createPathTagFunction = (pathEncoder = encodeURIPath) => function path2(stat
     }
     return previousValue + currentValue + (index === params.length ? "" : encoded);
   }, "");
-  const pathOnly = path3.split(/[?#]/, 1)[0];
+  const pathOnly = path4.split(/[?#]/, 1)[0];
   const invalidSegmentPattern = /(?<=^|\/)(?:\.|%2e){1,2}(?=\/|$)/gi;
   let match;
   while ((match = invalidSegmentPattern.exec(pathOnly)) !== null) {
@@ -31753,10 +31753,10 @@ var createPathTagFunction = (pathEncoder = encodeURIPath) => function path2(stat
     }, "");
     throw new OpenAIError(`Path parameters result in path with invalid segments:
 ${invalidSegments.map((e) => e.error).join("\n")}
-${path3}
+${path4}
 ${underline}`);
   }
-  return path3;
+  return path4;
 };
 var path = /* @__PURE__ */ createPathTagFunction(encodeURIPath);
 
@@ -36559,9 +36559,9 @@ var OpenAI = class {
     this.apiKey = token;
     return true;
   }
-  buildURL(path2, query, defaultBaseURL) {
+  buildURL(path3, query, defaultBaseURL) {
     const baseURL = !__classPrivateFieldGet(this, _OpenAI_instances, "m", _OpenAI_baseURLOverridden).call(this) && defaultBaseURL || this.baseURL;
-    const url = isAbsoluteURL(path2) ? new URL(path2) : new URL(baseURL + (baseURL.endsWith("/") && path2.startsWith("/") ? path2.slice(1) : path2));
+    const url = isAbsoluteURL(path3) ? new URL(path3) : new URL(baseURL + (baseURL.endsWith("/") && path3.startsWith("/") ? path3.slice(1) : path3));
     const defaultQuery = this.defaultQuery();
     if (!isEmptyObj(defaultQuery)) {
       query = { ...defaultQuery, ...query };
@@ -36585,24 +36585,24 @@ var OpenAI = class {
    */
   async prepareRequest(request, { url, options }) {
   }
-  get(path2, opts) {
-    return this.methodRequest("get", path2, opts);
+  get(path3, opts) {
+    return this.methodRequest("get", path3, opts);
   }
-  post(path2, opts) {
-    return this.methodRequest("post", path2, opts);
+  post(path3, opts) {
+    return this.methodRequest("post", path3, opts);
   }
-  patch(path2, opts) {
-    return this.methodRequest("patch", path2, opts);
+  patch(path3, opts) {
+    return this.methodRequest("patch", path3, opts);
   }
-  put(path2, opts) {
-    return this.methodRequest("put", path2, opts);
+  put(path3, opts) {
+    return this.methodRequest("put", path3, opts);
   }
-  delete(path2, opts) {
-    return this.methodRequest("delete", path2, opts);
+  delete(path3, opts) {
+    return this.methodRequest("delete", path3, opts);
   }
-  methodRequest(method, path2, opts) {
+  methodRequest(method, path3, opts) {
     return this.request(Promise.resolve(opts).then((opts2) => {
-      return { method, path: path2, ...opts2 };
+      return { method, path: path3, ...opts2 };
     }));
   }
   request(options, remainingRetries = null) {
@@ -36706,8 +36706,8 @@ var OpenAI = class {
     }));
     return { response, options, controller, requestLogID, retryOfRequestLogID, startTime };
   }
-  getAPIList(path2, Page2, opts) {
-    return this.requestAPIList(Page2, { method: "get", path: path2, ...opts });
+  getAPIList(path3, Page2, opts) {
+    return this.requestAPIList(Page2, { method: "get", path: path3, ...opts });
   }
   requestAPIList(Page2, options) {
     const request = this.makeRequest(options, null, void 0);
@@ -36785,8 +36785,8 @@ var OpenAI = class {
   }
   async buildRequest(inputOptions, { retryCount = 0 } = {}) {
     const options = { ...inputOptions };
-    const { method, path: path2, query, defaultBaseURL } = options;
-    const url = this.buildURL(path2, query, defaultBaseURL);
+    const { method, path: path3, query, defaultBaseURL } = options;
+    const url = this.buildURL(path3, query, defaultBaseURL);
     if ("timeout" in options)
       validatePositiveInteger("timeout", options.timeout);
     options.timeout = options.timeout ?? this.timeout;
@@ -36937,6 +36937,76 @@ function registerAiChatRoute(app2) {
   });
 }
 
+// src/routes/ai-translate.ts
+var import_fs = __toESM(require("fs"));
+var import_path33 = __toESM(require("path"));
+var import_crypto = __toESM(require("crypto"));
+function loadCache(filePath) {
+  try {
+    if (!import_fs.default.existsSync(filePath)) return {};
+    return JSON.parse(import_fs.default.readFileSync(filePath, "utf8"));
+  } catch {
+    return {};
+  }
+}
+function saveCache(filePath, cache) {
+  import_fs.default.mkdirSync(import_path33.default.dirname(filePath), { recursive: true });
+  import_fs.default.writeFileSync(filePath, JSON.stringify(cache, null, 2), "utf8");
+}
+async function withBackoff2(fn, max = 5) {
+  let delay = 500;
+  for (let i = 0; i < max; i++) {
+    try {
+      return await fn();
+    } catch (e) {
+      if (e?.status !== 429) throw e;
+      const jitter = Math.floor(Math.random() * 200);
+      await new Promise((r) => setTimeout(r, delay + jitter));
+      delay *= 2;
+    }
+  }
+  return await fn();
+}
+function registerAiTranslateRoute(app2) {
+  const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  const model = process.env.OPENAI_MODEL || "gpt-4o-mini";
+  const cacheFile = import_path33.default.join(process.cwd(), "data", "translation-cache.json");
+  let cache = loadCache(cacheFile);
+  app2.post("/ai/translate", async (req, res) => {
+    try {
+      const text = String(req.body?.text || "").trim();
+      const targetLang = String(req.body?.targetLang || "es").trim();
+      if (!text) return res.status(400).json({ error: "TEXT_REQUIRED" });
+      if (!targetLang) return res.status(400).json({ error: "TARGET_LANG_REQUIRED" });
+      if (targetLang === "es") return res.json({ translated: text, cached: true });
+      const hash = import_crypto.default.createHash("sha256").update(text).digest("hex").slice(0, 24);
+      const key = `${targetLang}:${hash}`;
+      if (cache[key]) return res.json({ translated: cache[key], cached: true });
+      const system = `You are a professional translator for a Catholic web app.
+Translate the user text to target language: ${targetLang}.
+Rules: preserve names/proper nouns; respectful tone; output ONLY the translation.`;
+      const translated = await withBackoff2(async () => {
+        const r = await client.chat.completions.create({
+          model,
+          temperature: 0.2,
+          messages: [
+            { role: "system", content: system },
+            { role: "user", content: text }
+          ]
+        });
+        return (r.choices?.[0]?.message?.content || "").trim();
+      });
+      if (!translated) return res.status(500).json({ error: "EMPTY_TRANSLATION" });
+      cache[key] = translated;
+      saveCache(cacheFile, cache);
+      return res.json({ translated, cached: false });
+    } catch (e) {
+      const status = e?.status === 429 ? 429 : 500;
+      return res.status(status).json({ error: "AI_TRANSLATE_FAILED", detail: e?.message || "unknown" });
+    }
+  });
+}
+
 // src/server.ts
 function requireAdminKey(req, res, next) {
   const expected = process.env.ADMIN_KEY;
@@ -36954,6 +37024,7 @@ app.use(
 );
 app.use(import_express.default.json({ limit: "1mb" }));
 registerAiChatRoute(app);
+registerAiTranslateRoute(app);
 var PORT = Number(process.env.PORT || 3001);
 app.get("/health", (_req, res) => {
   return res.json({ ok: true });
