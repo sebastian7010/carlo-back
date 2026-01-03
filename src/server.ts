@@ -3,7 +3,7 @@ import cors from "cors";
 import { prisma } from "./lib/prisma";
 import "dotenv/config";
 
-import { registerAiChatRoute } from "./ai-chat";
+import { registerAiChatRoute } from "./routes/ai-chat";
 // -------------------------
 // ADMIN KEY (mínimo para escrituras)
 // -------------------------

@@ -29974,7 +29974,7 @@ var require_client = __commonJS({
           "value": "prisma-client-js"
         },
         "output": {
-          "value": "C:\\Users\\AIO 3\\Desktop\\back acatis IA\\node_modules\\@prisma\\client",
+          "value": "C:\\Users\\sebas\\proyectos\\carlo-back\\node_modules\\@prisma\\client",
           "fromEnvVar": null
         },
         "config": {
@@ -29988,7 +29988,7 @@ var require_client = __commonJS({
           }
         ],
         "previewFeatures": [],
-        "sourceFilePath": "C:\\Users\\AIO 3\\Desktop\\back acatis IA\\prisma\\schema.prisma"
+        "sourceFilePath": "C:\\Users\\sebas\\proyectos\\carlo-back\\prisma\\schema.prisma"
       },
       "relativeEnvPaths": {
         "rootEnvPath": null,
@@ -36893,58 +36893,46 @@ OpenAI.Evals = Evals;
 OpenAI.Containers = Containers;
 OpenAI.Videos = Videos;
 
-// src/ai-chat.ts
+// src/routes/ai-chat.ts
+async function withBackoff(fn, max = 5) {
+  let delay = 500;
+  for (let i = 0; i < max; i++) {
+    try {
+      return await fn();
+    } catch (e) {
+      if (e?.status !== 429) throw e;
+      const jitter = Math.floor(Math.random() * 200);
+      await new Promise((r) => setTimeout(r, delay + jitter));
+      delay *= 2;
+    }
+  }
+  return await fn();
+}
 function registerAiChatRoute(app2) {
-  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  const model = process.env.OPENAI_MODEL || "gpt-4o-mini";
   app2.post("/ai/chat", async (req, res) => {
     try {
-      const { message, lang = "es", sessionId } = req.body ?? {};
-      if (!process.env.OPENAI_API_KEY) {
-        return res.status(500).json({ error: "OPENAI_API_KEY_NOT_SET" });
-      }
-      if (!message || typeof message !== "string") {
-        return res.status(400).json({ error: "MESSAGE_REQUIRED" });
-      }
-      const mod = await openai.moderations.create({
-        input: message
-      });
-      const flagged = Boolean(mod?.results?.[0]?.flagged);
-      const outOfScope = /html|css|javascript|react|next\.js|sql|postgres|bitcoin|trading|programaci/i.test(message);
-      if (outOfScope) {
-        return res.json({
-          answer: lang === "es" ? "Puedo ayudarte solo con temas de fe cat\xF3lica, Biblia y moral cristiana. Si quieres, dime tu duda religiosa y con gusto la respondemos." : "I can only help with Catholic faith, Bible, and Christian moral topics. Share your religious question and I\u2019ll help."
+      const message = String(req.body?.message || "").trim();
+      const lang = String(req.body?.lang || "es").trim();
+      if (!message) return res.status(400).json({ error: "MESSAGE_REQUIRED" });
+      const system = lang.startsWith("en") ? "You are a Catholic assistant. Answer with a short, warm, respectful response. If asked for a prayer, provide one. Add a short disclaimer: this is general guidance and does not replace a priest or spiritual director." : "Eres un asistente cat\xF3lico. Responde de forma breve, c\xE1lida y respetuosa. Si te piden una oraci\xF3n, d\xE1sela. Agrega un descargo corto: es orientaci\xF3n general y no reemplaza a un sacerdote o director espiritual.";
+      const result = await withBackoff(async () => {
+        return await client.chat.completions.create({
+          model,
+          messages: [
+            { role: "system", content: system },
+            { role: "user", content: message }
+          ],
+          temperature: 0.7,
+          max_tokens: 350
         });
-      }
-      if (flagged) {
-        return res.json({
-          answer: lang === "es" ? "Siento que est\xE9s pasando por esto. Tu vida vale mucho. Si est\xE1s en peligro inmediato o piensas hacerte da\xF1o, busca ayuda urgente en tu pa\xEDs (l\xEDnea de emergencias) o una persona de confianza ahora mismo. Si quieres, cu\xE9ntame qu\xE9 est\xE1 pasando y te acompa\xF1o con orientaci\xF3n espiritual y pasos seguros." : "I\u2019m sorry you\u2019re going through this. Your life matters. If you\u2019re in immediate danger or might harm yourself, seek urgent local help or a trusted person right now. If you want, tell me what\u2019s happening and I\u2019ll support you spiritually with safe next steps."
-        });
-      }
-      const instructions = `
-Eres un asistente de fe CAT\xD3LICA (solo doctrina, Biblia, moral cristiana).
-NO hables de programaci\xF3n, negocios, pol\xEDtica, entretenimiento, ni temas no religiosos.
-Si te piden algo fuera del tema: rechaza con amabilidad y redirige.
-
-Tono: amigo cercano, calmado pero seguro, buscando el bien del usuario.
-Pide m\xE1s contexto si falta informaci\xF3n.
-S\xE9 fiel a la historia y a la ense\xF1anza oficial de la Iglesia (Catecismo, Escritura, tradici\xF3n, santos).
-Cita referencias (p.ej. "Catecismo 2357" o "Jn 3:16") sin pegar textos largos.
-
-Idioma: responde en ${lang}.
-Incluye siempre: "Esto es orientaci\xF3n general y no reemplaza a un sacerdote o director espiritual."
-`;
-      const resp = await openai.responses.create({
-        model: process.env.OPENAI_MODEL || "gpt-4o-mini",
-        input: message,
-        instructions
-        // tools: [{ type: "web_search" }], // opcional
       });
-      const answer = resp.output_text ?? "";
+      const answer = result.choices?.[0]?.message?.content?.trim() || "";
       return res.json({ answer });
     } catch (e) {
-      console.error("POST /ai/chat error:", e?.status, e?.message, e?.error?.message, e);
       const status = e?.status === 429 ? 429 : 500;
-      return res.status(status).json({ error: "AI_CHAT_FAILED", detail: e?.message || e?.error?.message || "unknown" });
+      return res.status(status).json({ error: "AI_CHAT_FAILED", detail: e?.message || "unknown" });
     }
   });
 }
