@@ -2,7 +2,11 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import { prisma } from "./lib/prisma";
 import "dotenv/config";
+import cookieParser from "cookie-parser";
+import authRoutes from "./routes/auth";
 
+
+import { registerConversationsRoute } from "./routes/conversations";
 import { registerAiChatRoute } from "./routes/ai-chat";
 import { registerAiTranslateRoute } from "./routes/ai-translate";
 // -------------------------
@@ -21,6 +25,7 @@ function requireAdminKey(req: Request, res: Response, next: any) {
 }
 
 const app = express();
+app.use(cookieParser());
 
 // CORS (front en 3000)
 app.use(
@@ -34,10 +39,16 @@ app.use(
 app.use(express.json({ limit: "1mb" }));
 
 
+app.use("/auth", authRoutes);
 // AI Chat
 registerAiChatRoute(app)
 
-registerAiTranslateRoute(app);const PORT = Number(process.env.PORT || 3001);
+
+registerAiTranslateRoute(app);
+
+registerConversationsRoute(app);
+const PORT = Number(process.env.PORT || 3001);
+
 
 // Health
 app.get("/health", (_req: Request, res: Response) => {
