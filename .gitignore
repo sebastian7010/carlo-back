@@ -14,3 +14,5 @@ patch_*.py
 *_backup_*/
 audit_*.txt
 *.log
+
+.env
