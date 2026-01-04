@@ -8,3 +8,9 @@ node_modules
 *.bak
 *.bak*
 patch_*.py
+
+# local backups / dumps
+*.bak.*
+*_backup_*/
+audit_*.txt
+*.log
