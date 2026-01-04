@@ -1,12 +1,13 @@
 import express, { Request, Response } from "express";
+import { PrismaClient } from "@prisma/client";
 import cors from "cors";
-import { prisma } from "./lib/prisma";
 import "dotenv/config";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth";
 
 
 import { registerConversationsRoute } from "./routes/conversations";
+import discoverSaintRouter from "./routes/discover-saint";
 import { registerAiChatRoute } from "./routes/ai-chat";
 import { registerAiTranslateRoute } from "./routes/ai-translate";
 // -------------------------
@@ -25,6 +26,7 @@ function requireAdminKey(req: Request, res: Response, next: any) {
 }
 
 const app = express();
+const prisma = new PrismaClient();
 app.use(cookieParser());
 
 // CORS (front en 3000)
@@ -51,9 +53,6 @@ const PORT = Number(process.env.PORT || 3001);
 
 
 // Health
-app.get("/health", (_req: Request, res: Response) => {
-  return res.json({ ok: true });
-});
 
 // Root
 app.get("/", (_req: Request, res: Response) => {
@@ -69,6 +68,56 @@ app.get("/saints", async (_req: Request, res: Response) => {
     const saints = await prisma.saint.findMany({
       orderBy: { createdAt: "desc" },
     });
+
+app.post("/discover-saint", async (req, res) => {
+  try {
+    const about = String(req.body?.about || "");
+    const qualities = Array.isArray(req.body?.qualities) ? req.body.qualities.map(String) : [];
+    const growthAreas = Array.isArray(req.body?.growthAreas) ? req.body.growthAreas.map(String) : [];
+
+    const terms = [
+      ...qualities,
+      ...growthAreas,
+      ...about
+        .toLowerCase()
+        .replace(/[^a-záéíóúñü0-9\s]/gi, " ")
+        .split(/\s+/)
+        .filter(Boolean),
+    ]
+      .map((t) => t.toLowerCase())
+      .filter((t) => t.length >= 3);
+
+    const saints = await prisma.saint.findMany({
+      select: { id: true, slug: true, name: true, biography: true,country: true, title: true },
+      take: 200,
+    });
+
+    const matches = saints
+      .map((s) => {
+        const hay = [
+          s.name,
+          s.country || "",
+          s.title || "",
+          (s.biography || ""),
+        ].join(" ").toLowerCase();
+
+        let score = 0;
+        for (const t of terms) if (hay.includes(t)) score += 1;
+        return { id: s.id, slug: s.slug, name: s.name, score };
+      })
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 5);
+
+    const summary = matches.length
+      ? "Elegimos estos santos por afinidad con tus cualidades y áreas de crecimiento."
+      : "No encontramos coincidencias claras. Intenta escribir más sobre ti.";
+
+    res.json({ summary, matches });
+  } catch (e) {
+    res.status(500).json({ error: "discover-saint failed" });
+  }
+});
+
     return res.json(saints);
   } catch (e) {
     console.error(e);
@@ -523,6 +572,56 @@ app.delete("/prayers/:id", requireAdminKey, async (req: Request, res: Response) 
   }
 });
 
+
+
+app.get("/health", (_req, res) => res.json({ ok: true }));
+
+/** Discover saint (match) */
+app.post("/discover-saint", async (req: any, res: any) => {
+  try {
+    const about = String(req.body?.about || "");
+    const qualities = Array.isArray(req.body?.qualities) ? req.body.qualities.map(String) : [];
+    const growthAreas = Array.isArray(req.body?.growthAreas) ? req.body.growthAreas.map(String) : [];
+
+    const terms = [
+      ...qualities,
+      ...growthAreas,
+      ...about
+        .toLowerCase()
+        .replace(/[^a-záéíóúñü0-9\s]/gi, " ")
+        .split(/\s+/)
+        .filter(Boolean),
+    ]
+      .map((t: any) => String(t).toLowerCase())
+      .filter((t: any) => t.length >= 3);
+
+    const saints = await prisma.saint.findMany({
+      select: { id: true, slug: true, name: true, biography: true, country: true, title: true },
+      take: 200,
+    });
+
+    const matches = saints
+      .map((s: any) => {
+        const hay = [s.name, s.country || "", s.title || "", s.biography || ""].join(" ").toLowerCase();
+        let score = 0;
+        for (const t of terms) if (hay.includes(t)) score += 1;
+        return { id: s.id, slug: s.slug, name: s.name, score };
+      })
+      .filter((m: any) => m.score > 0)
+      .sort((a: any, b: any) => b.score - a.score)
+      .slice(0, 5);
+
+    const summary = matches.length
+      ? "Elegimos estos santos por afinidad con tus cualidades y áreas de crecimiento."
+      : "No encontramos coincidencias claras. Escribe más sobre ti y selecciona más opciones.";
+
+    return res.json({ summary, matches });
+  } catch (e: any) {
+    console.error(e);
+    return res.status(500).json({ error: "discover-saint failed" });
+  }
+});
+/** END Discover saint */
 
 app.listen(PORT, () => {
   console.log(`✅ Backend Acutis corriendo en http://localhost:${PORT}`);
