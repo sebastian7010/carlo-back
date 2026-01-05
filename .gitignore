@@ -16,3 +16,5 @@ audit_*.txt
 *.log
 
 .env
+.env
+.env.*
