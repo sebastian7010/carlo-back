@@ -113,13 +113,14 @@ app.post("/discover-saint", async (req, res) => {
       : "No encontramos coincidencias claras. Intenta escribir más sobre ti.";
 
     res.json({ summary, matches });
-  } catch (e) {
-    res.status(500).json({ error: "discover-saint failed" });
-  }
+  } catch (e: any) {
+    console.error("discover-saint error:", e);
+      return res.status(500).json({ error: "discover-saint failed", message: ((e as any)?.message) || String(e) });
+    }
 });
 
     return res.json(saints);
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
     return res.status(500).json({ error: "error listando santos" });
   }
@@ -136,7 +137,7 @@ app.get("/saints/:slug", async (req: Request, res: Response) => {
 
     if (!saint) return res.status(404).json({ error: "SAINT_NOT_FOUND" });
     return res.json(saint);
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
     return res.status(500).json({ error: "error trayendo santo" });
   }
@@ -341,7 +342,7 @@ app.get("/miracles", async (req: Request, res: Response) => {
         saint: m.saint,
       }))
     );
-  } catch (e) {
+  } catch (e: any) {
     console.error("❌ Error /miracles", e);
     return res.status(500).json({ error: "error listando milagros" });
   }
@@ -360,7 +361,7 @@ app.get("/saints/:id/miracles", async (req: Request, res: Response) => {
     });
 
     return res.json(miracles);
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
     return res.status(500).json({ error: "error listando milagros" });
   }
@@ -481,7 +482,7 @@ app.get("/prayers", async (req: Request, res: Response) => {
       orderBy: { createdAt: "desc" },
     });
     return res.json(prayers);
-  } catch (e) {
+  } catch (e: any) {
     console.error("GET /prayers error:", e);
     return res.status(500).json({ error: "PRAYERS_LIST_FAILED" });
   }
@@ -495,7 +496,7 @@ app.get("/prayers/approved", async (req: Request, res: Response) => {
       orderBy: { createdAt: "desc" },
     });
     return res.json(prayers);
-  } catch (e) {
+  } catch (e: any) {
     console.error("GET /prayers/approved error:", e);
     return res.status(500).json({ error: "PRAYERS_APPROVED_LIST_FAILED" });
   }
@@ -525,7 +526,7 @@ app.post("/prayers", requireAdminKey, async (req: Request, res: Response) => {
     });
 
     return res.status(201).json(prayer);
-  } catch (e) {
+  } catch (e: any) {
     console.error("POST /prayers error:", e);
     return res.status(500).json({ error: "PRAYER_CREATE_FAILED" });
   }
@@ -550,7 +551,7 @@ app.patch("/prayers/:id", requireAdminKey, async (req: Request, res: Response) =
 
     const prayer = await prisma.prayer.update({ where: { id }, data });
     return res.json(prayer);
-  } catch (e) {
+  } catch (e: any) {
     console.error("PATCH /prayers/:id error:", e);
     return res.status(500).json({ error: "PRAYER_UPDATE_FAILED" });
   }
@@ -566,7 +567,7 @@ app.delete("/prayers/:id", requireAdminKey, async (req: Request, res: Response) 
 
     await prisma.prayer.delete({ where: { id } });
     return res.status(204).send();
-  } catch (e) {
+  } catch (e: any) {
     console.error("DELETE /prayers/:id error:", e);
     return res.status(500).json({ error: "PRAYER_DELETE_FAILED" });
   }
@@ -618,8 +619,9 @@ app.post("/discover-saint", async (req: any, res: any) => {
     return res.json({ summary, matches });
   } catch (e: any) {
     console.error(e);
-    return res.status(500).json({ error: "discover-saint failed" });
-  }
+    console.error("discover-saint error:", e);
+      return res.status(500).json({ error: "discover-saint failed", message: ((e as any)?.message) || String(e) });
+    }
 });
 /** END Discover saint */
 
