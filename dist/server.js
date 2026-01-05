@@ -17386,8 +17386,23 @@ var require_utils2 = __commonJS({
   "node_modules/qs/lib/utils.js"(exports2, module2) {
     "use strict";
     var formats = require_formats();
+    var getSideChannel = require_side_channel();
     var has2 = Object.prototype.hasOwnProperty;
     var isArray2 = Array.isArray;
+    var overflowChannel = getSideChannel();
+    var markOverflow = function markOverflow2(obj, maxIndex) {
+      overflowChannel.set(obj, maxIndex);
+      return obj;
+    };
+    var isOverflow = function isOverflow2(obj) {
+      return overflowChannel.has(obj);
+    };
+    var getMaxIndex = function getMaxIndex2(obj) {
+      return overflowChannel.get(obj);
+    };
+    var setMaxIndex = function setMaxIndex2(obj, maxIndex) {
+      overflowChannel.set(obj, maxIndex);
+    };
     var hexTable = (function() {
       var array = [];
       for (var i = 0; i < 256; ++i) {
@@ -17427,7 +17442,11 @@ var require_utils2 = __commonJS({
         if (isArray2(target)) {
           target.push(source);
         } else if (target && typeof target === "object") {
-          if (options && (options.plainObjects || options.allowPrototypes) || !has2.call(Object.prototype, source)) {
+          if (isOverflow(target)) {
+            var newIndex = getMaxIndex(target) + 1;
+            target[newIndex] = source;
+            setMaxIndex(target, newIndex);
+          } else if (options && (options.plainObjects || options.allowPrototypes) || !has2.call(Object.prototype, source)) {
             target[source] = true;
           }
         } else {
@@ -17436,6 +17455,15 @@ var require_utils2 = __commonJS({
         return target;
       }
       if (!target || typeof target !== "object") {
+        if (isOverflow(source)) {
+          var sourceKeys = Object.keys(source);
+          var result = options && options.plainObjects ? { __proto__: null, 0: target } : { 0: target };
+          for (var m = 0; m < sourceKeys.length; m++) {
+            var oldKey = parseInt(sourceKeys[m], 10);
+            result[oldKey + 1] = source[sourceKeys[m]];
+          }
+          return markOverflow(result, getMaxIndex(source) + 1);
+        }
         return [target].concat(source);
       }
       var mergeTarget = target;
@@ -17558,8 +17586,18 @@ var require_utils2 = __commonJS({
       }
       return !!(obj.constructor && obj.constructor.isBuffer && obj.constructor.isBuffer(obj));
     };
-    var combine = function combine2(a, b) {
-      return [].concat(a, b);
+    var combine = function combine2(a, b, arrayLimit, plainObjects) {
+      if (isOverflow(a)) {
+        var newIndex = getMaxIndex(a) + 1;
+        a[newIndex] = b;
+        setMaxIndex(a, newIndex);
+        return a;
+      }
+      var result = [].concat(a, b);
+      if (result.length > arrayLimit) {
+        return markOverflow(arrayToObject(result, { plainObjects }), result.length - 1);
+      }
+      return result;
     };
     var maybeMap = function maybeMap2(val, fn) {
       if (isArray2(val)) {
@@ -17579,6 +17617,7 @@ var require_utils2 = __commonJS({
       decode,
       encode: encode2,
       isBuffer,
+      isOverflow,
       isRegExp,
       maybeMap,
       merge
@@ -17957,16 +17996,18 @@ var require_parse = __commonJS({
           val = options.strictNullHandling ? null : "";
         } else {
           key = options.decoder(part.slice(0, pos), defaults2.decoder, charset, "key");
-          val = utils.maybeMap(
-            parseArrayValue(
-              part.slice(pos + 1),
-              options,
-              isArray2(obj[key]) ? obj[key].length : 0
-            ),
-            function(encodedVal) {
-              return options.decoder(encodedVal, defaults2.decoder, charset, "value");
-            }
-          );
+          if (key !== null) {
+            val = utils.maybeMap(
+              parseArrayValue(
+                part.slice(pos + 1),
+                options,
+                isArray2(obj[key]) ? obj[key].length : 0
+              ),
+              function(encodedVal) {
+                return options.decoder(encodedVal, defaults2.decoder, charset, "value");
+              }
+            );
+          }
         }
         if (val && options.interpretNumericEntities && charset === "iso-8859-1") {
           val = interpretNumericEntities(String(val));
@@ -17974,11 +18015,18 @@ var require_parse = __commonJS({
         if (part.indexOf("[]=") > -1) {
           val = isArray2(val) ? [val] : val;
         }
-        var existing = has2.call(obj, key);
-        if (existing && options.duplicates === "combine") {
-          obj[key] = utils.combine(obj[key], val);
-        } else if (!existing || options.duplicates === "last") {
-          obj[key] = val;
+        if (key !== null) {
+          var existing = has2.call(obj, key);
+          if (existing && options.duplicates === "combine") {
+            obj[key] = utils.combine(
+              obj[key],
+              val,
+              options.arrayLimit,
+              options.plainObjects
+            );
+          } else if (!existing || options.duplicates === "last") {
+            obj[key] = val;
+          }
         }
       }
       return obj;
@@ -17994,7 +18042,16 @@ var require_parse = __commonJS({
         var obj;
         var root = chain[i];
         if (root === "[]" && options.parseArrays) {
-          obj = options.allowEmptyArrays && (leaf === "" || options.strictNullHandling && leaf === null) ? [] : utils.combine([], leaf);
+          if (utils.isOverflow(leaf)) {
+            obj = leaf;
+          } else {
+            obj = options.allowEmptyArrays && (leaf === "" || options.strictNullHandling && leaf === null) ? [] : utils.combine(
+              [],
+              leaf,
+              options.arrayLimit,
+              options.plainObjects
+            );
+          }
         } else {
           obj = options.plainObjects ? { __proto__: null } : {};
           var cleanRoot = root.charAt(0) === "[" && root.charAt(root.length - 1) === "]" ? root.slice(1, -1) : root;
@@ -18013,14 +18070,19 @@ var require_parse = __commonJS({
       }
       return leaf;
     };
-    var parseKeys = function parseQueryStringKeys(givenKey, val, options, valuesParsed) {
-      if (!givenKey) {
-        return;
-      }
+    var splitKeyIntoSegments = function splitKeyIntoSegments2(givenKey, options) {
       var key = options.allowDots ? givenKey.replace(/\.([^.[]+)/g, "[$1]") : givenKey;
+      if (options.depth <= 0) {
+        if (!options.plainObjects && has2.call(Object.prototype, key)) {
+          if (!options.allowPrototypes) {
+            return;
+          }
+        }
+        return [key];
+      }
       var brackets = /(\[[^[\]]*])/;
       var child = /(\[[^[\]]*])/g;
-      var segment = options.depth > 0 && brackets.exec(key);
+      var segment = brackets.exec(key);
       var parent = segment ? key.slice(0, segment.index) : key;
       var keys = [];
       if (parent) {
@@ -18032,9 +18094,10 @@ var require_parse = __commonJS({
         keys.push(parent);
       }
       var i = 0;
-      while (options.depth > 0 && (segment = child.exec(key)) !== null && i < options.depth) {
+      while ((segment = child.exec(key)) !== null && i < options.depth) {
         i += 1;
-        if (!options.plainObjects && has2.call(Object.prototype, segment[1].slice(1, -1))) {
+        var segmentContent = segment[1].slice(1, -1);
+        if (!options.plainObjects && has2.call(Object.prototype, segmentContent)) {
           if (!options.allowPrototypes) {
             return;
           }
@@ -18046,6 +18109,16 @@ var require_parse = __commonJS({
           throw new RangeError("Input depth exceeded depth option of " + options.depth + " and strictDepth is true");
         }
         keys.push("[" + key.slice(segment.index) + "]");
+      }
+      return keys;
+    };
+    var parseKeys = function parseQueryStringKeys(givenKey, val, options, valuesParsed) {
+      if (!givenKey) {
+        return;
+      }
+      var keys = splitKeyIntoSegments(givenKey, options);
+      if (!keys) {
+        return;
       }
       return parseObject(keys, val, options, valuesParsed);
     };

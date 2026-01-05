@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express, { type Request, type Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import cors from "cors";
 import "dotenv/config";
@@ -69,7 +69,7 @@ app.get("/saints", async (_req: Request, res: Response) => {
       orderBy: { createdAt: "desc" },
     });
 
-app.post("/discover-saint", async (req, res) => {
+app.post("/discover-saint", async (req: Request, res: Response) => {
   try {
     const about = String(req.body?.about || "");
     const qualities = Array.isArray(req.body?.qualities) ? req.body.qualities.map(String) : [];
@@ -84,8 +84,8 @@ app.post("/discover-saint", async (req, res) => {
         .split(/\s+/)
         .filter(Boolean),
     ]
-      .map((t) => t.toLowerCase())
-      .filter((t) => t.length >= 3);
+      .map((t: any) => t.toLowerCase())
+      .filter((t: any) => t.length >= 3);
 
     const saints = await prisma.saint.findMany({
       select: { id: true, slug: true, name: true, biography: true,country: true, title: true },
@@ -93,7 +93,7 @@ app.post("/discover-saint", async (req, res) => {
     });
 
     const matches = saints
-      .map((s) => {
+      .map((s: any) => {
         const hay = [
           s.name,
           s.country || "",
@@ -105,7 +105,7 @@ app.post("/discover-saint", async (req, res) => {
         for (const t of terms) if (hay.includes(t)) score += 1;
         return { id: s.id, slug: s.slug, name: s.name, score };
       })
-      .sort((a, b) => b.score - a.score)
+      .sort((a: any, b: any) => b.score - a.score)
       .slice(0, 5);
 
     const summary = matches.length
@@ -327,7 +327,7 @@ app.get("/miracles", async (req: Request, res: Response) => {
 
     // normaliza por si el front quiere usarlo directo
     return res.json(
-      miracles.map((m) => ({
+      miracles.map((m: any) => ({
         id: m.id,
         saintId: m.saintId,
         title: m.title,
@@ -575,7 +575,7 @@ app.delete("/prayers/:id", requireAdminKey, async (req: Request, res: Response) 
 
 
 
-app.get("/health", (_req, res) => res.json({ ok: true }));
+app.get("/health", (_req: Request, res: Response) => res.json({ ok: true }));
 
 /** Discover saint (match) */
 app.post("/discover-saint", async (req: any, res: any) => {
