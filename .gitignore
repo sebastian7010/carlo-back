@@ -19,3 +19,6 @@ audit_*.txt
 .env
 .env.*
 .env
+dist/
+data/translation-cache.json
+tmp_check_slugs.cjs
