@@ -60,10 +60,26 @@ app.use(express.json({ limit: "1mb" }));
 // -------------------------
 // ROUTES (API)
 // -------------------------
+// Routes
 app.use("/api/auth", authRoutes);
+
+// Saints (nuevo + legacy)
 app.use("/api/saints", saintsRouter);
+app.use("/saints", saintsRouter);
+
+// Prayers (nuevo + legacy)
 app.use("/api/prayers", prayersRouter);
+app.use("/prayers", prayersRouter);
+
+// Miracles (nuevo + legacy)
 app.use("/api/miracles", miraclesRouter);
+app.use("/miracles", miraclesRouter);
+
+// Discover Saint (nuevo + legacy, dos idiomas)
+app.use("/api/discover-saint", discoverSaintRouter);
+app.use("/api/descubrir-saint", discoverSaintRouter);
+app.use("/discover-saint", discoverSaintRouter);
+app.use("/descubrir-saint", discoverSaintRouter);
 
 // Conversations
 registerConversationsRoute(app);
