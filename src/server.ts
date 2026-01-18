@@ -7,13 +7,20 @@ import { PrismaClient } from "@prisma/client";
 import authRoutes from "./routes/auth";
 import { registerConversationsRoute } from "./routes/conversations";
 import discoverSaintRouter from "./routes/discover-saint";
+import saintsRouter from "./routes/saints";
+import prayersRouter from "./routes/prayers";
+import miraclesRouter from "./routes/miracles";
 import { registerAiChatRoute } from "./routes/ai-chat";
 import { registerAiTranslateRoute } from "./routes/ai-translate";
 
 // -------------------------
 // ADMIN KEY (mínimo para escrituras)
 // -------------------------
-export function requireAdminKey(req: Request, res: Response, next: NextFunction) {
+export function requireAdminKey(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   const expected = process.env.ADMIN_KEY;
 
   // Si no está configurada, NO bloquea (modo dev)
@@ -34,7 +41,15 @@ app.use(cookieParser());
 const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || "http://localhost:3000";
 app.use(
   cors({
-    origin: FRONTEND_ORIGIN,
+    // Mantengo tu lista para no romper nada.
+    // Si quieres luego, la hacemos más estricta usando FRONTEND_ORIGIN.
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:3001",
+      "http://localhost:3002",
+      "http://localhost:3003",
+      FRONTEND_ORIGIN,
+    ],
     credentials: true,
   })
 );
@@ -42,24 +57,43 @@ app.use(
 // JSON
 app.use(express.json({ limit: "1mb" }));
 
-// Routes
-app.use("/auth", authRoutes);
+// -------------------------
+// ROUTES (API)
+// -------------------------
+app.use("/api/auth", authRoutes);
+app.use("/api/saints", saintsRouter);
+app.use("/api/prayers", prayersRouter);
+app.use("/api/miracles", miraclesRouter);
+
+// Conversations
+registerConversationsRoute(app);
 
 // AI
 registerAiChatRoute(app);
 registerAiTranslateRoute(app);
 
-// Conversations
-registerConversationsRoute(app);
-
 // Discover Saint (montado en 2 paths por compatibilidad)
+app.use("/api/discover-saint", discoverSaintRouter);
+app.use("/api/descubrir-saint", discoverSaintRouter);
+
+// -------------------------
+// ROUTES (LEGACY SIN /api)
+// Esto arregla el "Cannot GET /saints" del front viejo.
+// -------------------------
+app.use("/auth", authRoutes);
+app.use("/saints", saintsRouter);
+app.use("/prayers", prayersRouter);
+app.use("/miracles", miraclesRouter);
 app.use("/discover-saint", discoverSaintRouter);
 app.use("/descubrir-saint", discoverSaintRouter);
 
 // Health / root
 app.get("/health", (_req: Request, res: Response) => res.json({ ok: true }));
+
 app.get("/", (_req: Request, res: Response) => {
-  res.send("Acutis API OK ✅ Usa /health, /saints, /saints/:id/miracles, /discover-saint");
+  res.send(
+    "Acutis API OK ✅ Usa /health, /api/saints (o /saints), /api/prayers (o /prayers), /api/miracles (o /miracles), /api/discover-saint (o /discover-saint)"
+  );
 });
 
 // Graceful shutdown
